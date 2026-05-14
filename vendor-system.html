@@ -184,14 +184,7 @@ tr.bl .cn{color:var(--red)}
 // === SUPABASE CONFIG ===
 var SB_URL = "https://pecjezkkpmwjfgcaixfd.supabase.co";
 var SB_KEY = "sb_publishable_S57NuoqV-ajhV97TOYkWpg_Mg38Et7A";
-var sb;
-try {
-  if (typeof supabase !== "undefined" && supabase.createClient) {
-    sb = supabase.createClient(SB_URL, SB_KEY);
-  } else if (typeof window.supabase !== "undefined") {
-    sb = window.supabase.createClient(SB_URL, SB_KEY);
-  }
-} catch(e) { console.error("Supabase init error:", e); }
+var sb = null;
 
 // === COMPANIES ===
 var CATS = ["لوله و اتصالات","فلنج","ولو و شیرآلات","پمپ و کمپرسور","مواد شیمیایی","قطعات یدکی","ابزار دقیق","برق صنعتی","تجهیزات ایمنی","خدمات مهندسی","ملزومات اداری","تجهیزات سرمایه‌ای"];
@@ -235,13 +228,18 @@ var allSuppliers = [];
 var API_KEY = "aa-nsuAawlfncDiyaDutoQcTeyxzLIeMuoE0K7tdVkR480HEmhN";
 
 // Populate company dropdown
-(function(){
+document.addEventListener("DOMContentLoaded", function(){
+  // Init Supabase
+  try {
+    sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+  } catch(e) { console.error("SB:", e); }
   var sel = document.getElementById("selCo");
+  if(!sel) return;
   Object.keys(COMPANIES).forEach(function(k){
     var o = document.createElement("option");
     o.value = k; o.textContent = k; sel.appendChild(o);
   });
-})();
+});
 
 function onCoChange() {
   var v = document.getElementById("selCo").value;
@@ -287,13 +285,13 @@ function doLogin() {
   startApp();
 }
 
-function doLogout() {
+async function doLogout() {
   curUser = null;
   document.getElementById("loginPage").style.display = "flex";
   document.getElementById("app").style.display = "none";
 }
 
-async function startApp() {
+async async function startApp() {
   document.getElementById("loginPage").style.display = "none";
   document.getElementById("app").style.display = "block";
   var b = document.getElementById("userBadge");
@@ -543,15 +541,18 @@ async function submitRating(suppId) {
   } catch(e) { alert("خطا: " + e.message); }
 }
 
-async function changeStatus(id, status) {
+async async function changeStatus(id, status) {
   try {
-    await sb.from("suppliers").update({status:status}).eq("id",id);
-    alert("وضعیت تغییر کرد");
-    closeModal();
-    await loadSuppliers();
-    renderStats();
-    renderTab("list");
-  } catch(e) { alert("خطا: " + e.message); }
+    var res = await sb.from("suppliers").update({status:status}).eq("id",id);
+    if(res.error) throw res.error;
+    var i = allSuppliers.findIndex(function(s){return s.id===id;});
+    if(i>=0) allSuppliers[i].status = status;
+    closeModal(); renderStats(); renderTab(curTab);
+    var t=document.createElement("div");
+    t.textContent=status==="approved"?"✅ تایید شد":"❌ رد شد";
+    t.style.cssText="position:fixed;top:80px;right:50%;transform:translateX(50%);background:#1f2937;color:white;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:900;z-index:999";
+    document.body.appendChild(t);setTimeout(function(){t.remove();},2500);
+  } catch(e){alert("خطا: "+e.message);}
 }
 
 async function toggleBL(id) {

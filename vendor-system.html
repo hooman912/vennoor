@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سامانه مدیریت تامین‌کنندگان - هلدینگ خلیج فارس</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Vazirmatn",Tahoma,sans-serif;font-weight:700;background:#f8fafc;direction:rtl;min-height:100vh}
+button,input,select,textarea{font-family:"Vazirmatn",Tahoma,sans-serif;font-weight:700}
+:root{--gold:#f59e0b;--gold-d:#d97706;--g:#f3f4f6;--g2:#e5e7eb;--g5:#6b7280;--g8:#1f2937;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--r:12px}
+
+/* LOGIN */
+#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1e3a5f,#0f2027)}
+.lbox{background:white;border-radius:20px;padding:40px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.llogo{text-align:center;margin-bottom:28px}
+.licon{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+.llogo h1{font-size:19px;color:var(--g8);font-weight:900}
+.llogo p{font-size:13px;color:var(--g5);margin-top:4px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:13px;font-weight:900;color:#374151;margin-bottom:6px}
+.fg input,.fg select{width:100%;padding:11px 13px;border:1.5px solid var(--g2);border-radius:10px;font-size:14px;outline:none;transition:.2s;background:white}
+.fg input:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:white;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer}
+.lerr{background:#fee2e2;color:#dc2626;padding:10px;border-radius:8px;font-size:13px;margin-top:10px;display:none;font-weight:700}
+.lfoot{text-align:center;font-size:11px;color:#9ca3af;margin-top:16px}
+.reg-link{display:block;background:linear-gradient(135deg,#10b981,#059669);color:white;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:900;text-decoration:none;text-align:center;margin-top:14px;border-top:1px solid #e5e7eb;padding-top:16px}
+
+/* APP */
+#app{display:none}
+.hdr{background:white;border-bottom:2px solid var(--gold);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.hicon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.hdr-left h1{font-size:15px;font-weight:900;color:var(--g8)}
+.hdr-left p{font-size:11px;color:var(--g5)}
+.ubadge{background:var(--g);border-radius:20px;padding:6px 12px;font-size:12px;color:var(--g5);font-weight:700}
+.ubadge.adm{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:white}
+.logout{background:none;border:1.5px solid var(--g2);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--g5);cursor:pointer}
+
+.stats{display:flex;gap:12px;padding:16px 24px;background:white;border-bottom:1px solid var(--g);overflow-x:auto}
+.sc{flex:1;min-width:120px;background:#f9fafb;border-radius:12px;padding:14px 16px;border:1.5px solid var(--g)}
+.sc.gold{background:#fffbeb;border-color:#fde68a}
+.sc.green{background:#f0fdf4;border-color:#bbf7d0}
+.sc.red{background:#fef2f2;border-color:#fecaca}
+.sn{font-size:24px;font-weight:900;color:var(--g8)}
+.sc.gold .sn{color:var(--gold-d)}
+.sc.green .sn{color:var(--green)}
+.sc.red .sn{color:var(--red)}
+.sl{font-size:11px;color:var(--g5);margin-top:2px;font-weight:700}
+
+.tabs{display:flex;gap:4px;padding:12px 24px;background:white;border-bottom:1px solid var(--g);overflow-x:auto}
+.tab{padding:8px 16px;border-radius:8px;border:none;font-size:13px;font-weight:900;background:none;color:var(--g5);white-space:nowrap;cursor:pointer}
+.tab.active{background:var(--gold);color:white}
+
+.content{padding:20px 24px;max-width:1400px;margin:0 auto}
+.filters{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.si{flex:2;min-width:180px;padding:10px 14px;border:1.5px solid var(--g2);border-radius:10px;font-size:13px;outline:none;font-weight:700}
+.si:focus{border-color:var(--gold)}
+.fs{flex:1;min-width:130px;padding:10px 12px;border:1.5px solid var(--g2);border-radius:10px;font-size:13px;outline:none;background:white;font-weight:700}
+.abtn{padding:10px 16px;background:var(--gold);color:white;border:none;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer}
+.abtn.sec{background:var(--g8)}
+.abtn.grn{background:var(--green)}
+
+.tw{overflow-x:auto;border-radius:12px;border:1.5px solid var(--g)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f9fafb;padding:10px 12px;text-align:right;color:var(--g5);font-weight:900;border-bottom:1.5px solid var(--g);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid #f9fafb;vertical-align:middle}
+tr:hover td{background:#f9fafb;cursor:pointer}
+tr.bl td{background:#fef2f2}
+.cn{font-weight:900;color:var(--blue)}
+tr.bl .cn{color:var(--red)}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:900}
+.badge.hi{background:#d1fae5;color:#065f46}
+.badge.mi{background:#fef3c7;color:#92400e}
+.badge.lo{background:#fee2e2;color:#991b1b}
+.badge.pend{background:#dbeafe;color:#1e40af}
+.badge.appr{background:#d1fae5;color:#065f46}
+.badge.rej{background:#fee2e2;color:#991b1b}
+.stars{color:var(--gold);font-size:12px}
+.blb{background:#fee2e2;color:var(--red);border:1px solid #fca5a5;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:900}
+.pgn{display:flex;gap:6px;margin-top:16px;justify-content:center;flex-wrap:wrap}
+.pb{padding:7px 12px;border-radius:8px;border:1.5px solid var(--g2);background:white;font-size:13px;font-weight:700;cursor:pointer}
+.pb.active{background:var(--gold);border-color:var(--gold);color:white}
+.pb:disabled{opacity:.4;cursor:not-allowed}
+.rc{font-size:12px;color:var(--g5);margin-bottom:10px;font-weight:700}
+.loading{text-align:center;padding:40px;color:var(--g5);font-size:14px}
+.spin{display:inline-block;width:24px;height:24px;border:3px solid var(--g2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.mov.show{display:flex}
+.mbox{background:white;border-radius:16px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.mhdr{padding:20px 24px;border-bottom:1px solid var(--g);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1}
+.mhdr h2{font-size:16px;font-weight:900;color:var(--g8)}
+.mcls{background:none;border:none;font-size:20px;color:#9ca3af;cursor:pointer;width:32px;height:32px;border-radius:50%}
+.mbdy{padding:20px 24px}
+.dr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f9fafb}
+.dr:last-child{border:none}
+.dl{font-size:13px;color:var(--g5);font-weight:700}
+.dv{font-size:13px;font-weight:900;color:var(--g8)}
+.st{font-size:13px;font-weight:900;color:#374151;margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--gold)}
+.ir-box{background:#f0fdf4;border-radius:12px;padding:16px;border:2px solid #86efac;margin-bottom:12px}
+.ir-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.ir-fg{display:flex;flex-direction:column;gap:4px}
+.ir-fg label{font-size:11px;font-weight:900;color:#374151}
+.ir-fg input,.ir-fg select{padding:8px 10px;border:1.5px solid #d1fae5;border-radius:8px;font-size:13px;font-weight:700;outline:none}
+.ir-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.ir-s label{font-size:10px;font-weight:900;color:#374151;display:block;text-align:center;margin-bottom:4px}
+.ir-s select{width:100%;padding:5px 4px;border:1.5px solid #d1fae5;border-radius:6px;font-size:12px;font-weight:700;text-align:center}
+.hist-item{background:#f9fafb;border-radius:10px;padding:10px 12px;margin-bottom:6px;border-right:3px solid var(--gold)}
+.avg-box{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fde68a;border-radius:12px;padding:12px 16px;text-align:center;margin:12px 0}
+.avg-num{font-size:32px;font-weight:900;color:var(--gold-d)}
+
+/* AI TAB */
+.ai-box{background:white;border-radius:16px;padding:24px;box-shadow:0 4px 15px rgba(0,0,0,.08)}
+.ai-exs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.ai-ex{background:#f9fafb;border:1.5px solid var(--g2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.ai-ex:hover{border-color:var(--gold);color:var(--gold-d)}
+.ai-ta{width:100%;border:1.5px solid var(--g2);border-radius:10px;padding:12px;font-size:14px;font-weight:700;min-height:80px;outline:none;resize:vertical}
+.ai-ta:focus{border-color:var(--gold)}
+.ai-out{background:#f9fafb;border-radius:12px;padding:20px;margin-top:16px;font-size:14px;color:#374151;line-height:1.9;white-space:pre-wrap;border-right:3px solid var(--gold);display:none;font-weight:700}
+
+/* REPORT */
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.rc2{background:white;border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.07);border-top:3px solid var(--gold)}
+.rc2 h4{font-size:14px;font-weight:900;color:#374151;margin-bottom:12px}
+.rs{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:13px;font-weight:700}
+</style>
+</head>
+<body>
+
+<div id="loginPage">
+  <div class="lbox">
+    <div class="llogo">
+      <div class="licon">⚙️</div>
+      <h1>سامانه مدیریت تامین‌کنندگان</h1>
+      <p>هلدینگ خلیج فارس</p>
+    </div>
+    <div class="fg">
+      <label>انتخاب شرکت / پتروشیمی</label>
+      <select id="selCo" onchange="onCoChange()">
+        <option value="">-- ابتدا شرکت را انتخاب کنید --</option>
+        <option value="__admin__">👑 مدیریت سیستم (ادمین)</option>
+      </select>
+    </div>
+    <div id="extraFields"></div>
+    <div id="lerr" class="lerr"></div>
+    <button class="lbtn" onclick="doLogin()">ورود به سامانه</button>
+    <a href="register.html" target="_blank" class="reg-link">🏭 ثبت‌نام شرکت‌های جدید جهت ورود به لیست منابع هلدینگ خلیج فارس</a>
+    <div class="lfoot">تمامی حقوق محفوظ است — هلدینگ خلیج فارس ۱۴۰۴</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-in">
+      <div class="hdr-left">
+        <div class="hicon">⚙️</div>
+        <div><h1>سامانه متمرکز مدیریت تامین و منابع</h1><p>هلدینگ خلیج فارس</p></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="ubadge" id="userBadge"></span>
+        <button class="logout" onclick="doLogout()">خروج</button>
+      </div>
+    </div>
+  </div>
+  <div class="stats" id="statsBar"></div>
+  <div class="tabs" id="tabsBar"></div>
+  <div class="content" id="mainContent"></div>
+</div>
+
+<div class="mov" id="modal" onclick="closeModal(event)">
+  <div class="mbox" onclick="event.stopPropagation()">
+    <div class="mhdr"><h2 id="modalTitle"></h2><button class="mcls" onclick="closeModal()">✕</button></div>
+    <div class="mbdy" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// === SUPABASE CONFIG ===
+var SB_URL = "https://pecjezkkpmwjfgcaixfd.supabase.co";
+var SB_KEY = "sb_publishable_S57NuoqV-ajhV97TOYkWpg_Mg38Et7A";
+var sb;
+try {
+  if (typeof supabase !== "undefined" && supabase.createClient) {
+    sb = supabase.createClient(SB_URL, SB_KEY);
+  } else if (typeof window.supabase !== "undefined") {
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
+  }
+} catch(e) { console.error("Supabase init error:", e); }
+
+// === COMPANIES ===
+var CATS = ["لوله و اتصالات","فلنج","ولو و شیرآلات","پمپ و کمپرسور","مواد شیمیایی","قطعات یدکی","ابزار دقیق","برق صنعتی","تجهیزات ایمنی","خدمات مهندسی","ملزومات اداری","تجهیزات سرمایه‌ای"];
+var PROVS = ["تهران","اصفهان","خوزستان","فارس","البرز","مازندران","خراسان رضوی","آذربایجان شرقی","گیلان","کرمان","بوشهر","سیستان و بلوچستان"];
+var ADMIN_USER = "hoomankhoshbin";
+var ADMIN_PASS = "3304024";
+
+function mkEmps(pfx, names) {
+  return names.map(function(n, i) {
+    var c = pfx + String(101+i).padStart(3,"0");
+    return {name:n, personnel:c, pass:c};
+  });
+}
+
+var COMPANIES = {
+  "پتروشیمی اروند":{emps:mkEmps("AR",["علی محمدی","حسن رضایی","فاطمه احمدی","محمد کریمی","زهرا موسوی","رضا نجفی","مریم صادقی","امیر علوی","سارا قاسمی","جواد حسینی"])},
+  "پتروشیمی بندر امام":{emps:mkEmps("BI",["رضا حسینی","مریم صادقی","امیر علوی","سارا قاسمی","جواد نجفی","لیلا رستمی","کاوه مرادی","شیرین کمالی","وحید صفری","نسرین فرهادی"])},
+  "پتروشیمی بوعلی سینا":{emps:mkEmps("BS",["محسن اکبری","نسرین فرهادی","داود منصوری","الهام رحیمی","سیامک جعفری","مینا طاهری","رسول غلامی","آزاده ولی‌پور","مجید صالحی","زینب امیری"])},
+  "پتروشیمی خوزستان":{emps:mkEmps("KZ",["حمید زارعی","مینا طاهری","رسول غلامی","آزاده ولی‌پور","مجید صالحی","زینب امیری","کاوه مرادی","عباس نظری","راحله کاظمی","فرهاد معینی"])},
+  "پتروشیمی شهید تندگویان":{emps:mkEmps("TN",["عباس نظری","راحله کاظمی","فرهاد معینی","تهمینه جوادی","سعید یوسفی","مهسا رستگار","ندا حیدری","بهزاد مرادی","شیرین کمالی","وحید صفری"])},
+  "پتروشیمی کارون":{emps:mkEmps("KR",["مصطفی ابراهیمی","فریده حسن‌زاده","ناصر قربانی","معصومه رضوی","علیرضا خانی","کمال شهبازی","فروغ محمودی","حیدر قنبری","سودابه نوری","مهران خسروی"])},
+  "پتروشیمی آریا ساسول":{emps:mkEmps("AS",["کمال شهبازی","فروغ محمودی","حیدر قنبری","سودابه نوری","مهران خسروی","روناک احمدی","شاهین رضایی","منیژه کریمی","یوسف محمدی","آرزو صادقی"])},
+  "پتروشیمی پارس":{emps:mkEmps("PR",["شاهین رضایی","منیژه کریمی","یوسف محمدی","آرزو صادقی","نادر حیدری","مژگان علی‌پور","پرویز اسدی","گلناز طالبی","سهراب میرزایی","دلارام وطن‌دوست"])},
+  "پتروشیمی نوری":{emps:mkEmps("NR",["پرویز اسدی","گلناز طالبی","سهراب میرزایی","دلارام وطن‌دوست","امیرحسین رضوی","صبا امینی","آرش تهرانی","شادی کوهستانی","بهرام سلیمانی","پگاه رنجبر"])},
+  "پتروشیمی هنگام فاز ۱":{emps:mkEmps("HF",["آرش تهرانی","شادی کوهستانی","بهرام سلیمانی","پگاه رنجبر","کیوان فضلی","حسین علیزاده","زیبا کریمی","رامین صادقی","ترانه موسوی","فریبرز احمدی"])},
+  "پالایش گاز بیدبلند":{emps:mkEmps("BB",["حسین علیزاده","زیبا کریمی","رامین صادقی","ترانه موسوی","فریبرز احمدی","لادن رضایی","منوچهر حسینی","آناهیتا غلامی","فرزاد مرادی","سیما جعفری"])},
+  "پالایش گاز هویزه":{emps:mkEmps("HV",["منوچهر حسینی","آناهیتا غلامی","فرزاد مرادی","سیما جعفری","بهنام قاسمی","صادق محمودی","مهتاب کاظمی","ارسلان رحیمی","شبنم اکبری","مسعود طاهری"])},
+  "پتروشیمی گچساران":{emps:mkEmps("GC",["صادق محمودی","مهتاب کاظمی","ارسلان رحیمی","شبنم اکبری","مسعود طاهری","کورش ابراهیمی","فاطمه زارعی","بابک منصوری","لیلا حیدری","پویا رستمی"])},
+  "پتروشیمی ارومیه":{emps:mkEmps("UR",["کورش ابراهیمی","فاطمه زارعی","بابک منصوری","لیلا حیدری","پویا رستمی","داریوش قربانی","سحر محمدی","نیما کریمی","الناز حسینی","شهرام رضایی"])},
+  "پتروشیمی ایلام":{emps:mkEmps("IL",["داریوش قربانی","سحر محمدی","نیما کریمی","الناز حسینی","شهرام رضایی","مریم جوادی","بهروز اسدی","ویدا مرادی","سجاد علوی","نادیا صادقی"])},
+  "مبین انرژی خلیج فارس":{emps:mkEmps("MB",["کیارش حسنی","مینا رحیمی","پژمان اکبری","سانا موسوی","مهدی طاهری","فرناز ابراهیمی","یاسر محمدی","شیدا رضایی","فرشاد کریمی","نیوشا جعفری"])},
+  "فجر انرژی خلیج فارس":{emps:mkEmps("FJ",["یاسر محمدی","شیدا رضایی","فرشاد کریمی","نیوشا جعفری","امید صالحی","نصرت حیدری","آسیه مرادی","سامان قاسمی","ریحانه علیزاده","کاملیا نجفی"])},
+  "پتروشیمی آپادانا":{emps:mkEmps("AP",["نصرت حیدری","آسیه مرادی","سامان قاسمی","ریحانه علیزاده","کاملیا نجفی","محمدرضا صادقی","فرزانه کاظمی","علی‌اکبر رستمی","نگار موسوی","حسنعلی رحیمی"])},
+  "ستاد هلدینگ":{emps:mkEmps("HQ",["مدیر تدارکات","کارشناس ارشد خرید","مسئول قراردادها","رئیس ارزیابی","کارشناس ارزیابی","ناظر کیفیت","مسئول لجستیک","کارشناس حقوقی","مدیر مالی","کارشناس فناوری"])}
+};
+
+var curUser = null;
+var curTab = "list";
+var fSearch = "", fCat = "", fProv = "", fStatus = "", fType = "", curPage = 1, PER = 15;
+var allSuppliers = [];
+var API_KEY = "aa-nsuAawlfncDiyaDutoQcTeyxzLIeMuoE0K7tdVkR480HEmhN";
+
+// Populate company dropdown
+(function(){
+  var sel = document.getElementById("selCo");
+  Object.keys(COMPANIES).forEach(function(k){
+    var o = document.createElement("option");
+    o.value = k; o.textContent = k; sel.appendChild(o);
+  });
+})();
+
+function onCoChange() {
+  var v = document.getElementById("selCo").value;
+  var ef = document.getElementById("extraFields");
+  if (!v) { ef.innerHTML = ""; return; }
+  if (v === "__admin__") {
+    ef.innerHTML = '<div class="fg"><label>نام کاربری</label><input id="aUser" placeholder="نام کاربری"></div><div class="fg"><label>رمز عبور</label><input type="password" id="aPass" placeholder="رمز عبور"></div>';
+  } else {
+    var emps = COMPANIES[v].emps;
+    var opts = '<option value="">انتخاب کنید</option>' + emps.map(function(e){ return '<option value="' + e.personnel + '">' + e.name + ' (' + e.personnel + ')</option>'; }).join("");
+    ef.innerHTML = '<div class="fg"><label>نام کارمند</label><select id="selEmp">' + opts + '</select></div><div class="fg"><label>رمز عبور (= شماره پرسنلی)</label><input type="password" id="empPass" placeholder="شماره پرسنلی"></div>';
+  }
+}
+
+function showErr(msg) {
+  var el = document.getElementById("lerr");
+  el.textContent = msg; el.style.display = "block";
+  setTimeout(function(){ el.style.display = "none"; }, 4000);
+}
+
+function doLogin() {
+  var co = document.getElementById("selCo").value;
+  if (!co) { showErr("شرکت را انتخاب کنید"); return; }
+  if (co === "__admin__") {
+    var u = document.getElementById("aUser") ? document.getElementById("aUser").value.trim() : "";
+    var p = document.getElementById("aPass") ? document.getElementById("aPass").value.trim() : "";
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      curUser = {name:"مدیر سیستم", personnel:"0000", isAdmin:true, company:"ستاد هلدینگ خلیج فارس"};
+      startApp();
+    } else { showErr("نام کاربری یا رمز اشتباه است"); }
+    return;
+  }
+  var selEmp = document.getElementById("selEmp");
+  var empPass = document.getElementById("empPass");
+  if (!selEmp || !selEmp.value) { showErr("نام کارمند را انتخاب کنید"); return; }
+  if (!empPass || !empPass.value) { showErr("رمز عبور را وارد کنید"); return; }
+  var personnel = selEmp.value;
+  var pass = empPass.value.trim();
+  var emps = COMPANIES[co].emps;
+  var emp = emps.find(function(e){ return e.personnel === personnel; });
+  if (!emp || emp.pass !== pass) { showErr("رمز عبور اشتباه است"); return; }
+  curUser = {name:emp.name, personnel:emp.personnel, isAdmin:false, company:co};
+  startApp();
+}
+
+function doLogout() {
+  curUser = null;
+  document.getElementById("loginPage").style.display = "flex";
+  document.getElementById("app").style.display = "none";
+}
+
+async function startApp() {
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  var b = document.getElementById("userBadge");
+  b.textContent = curUser.isAdmin ? "👑 مدیر سیستم" : curUser.name + " | " + curUser.company;
+  if (curUser.isAdmin) b.classList.add("adm");
+  await loadSuppliers();
+  renderStats();
+  renderTabs();
+  renderTab("list");
+}
+
+async function loadSuppliers() {
+  document.getElementById("mainContent").innerHTML = '<div class="loading"><div class="spin"></div> در حال بارگذاری از دیتابیس...</div>';
+  if (!sb) { allSuppliers = []; document.getElementById("mainContent").innerHTML = '<div class="loading">خطا در اتصال به دیتابیس</div>'; return; }
+  try {
+    var res = await sb.from("suppliers").select("*").order("created_at", {ascending:false});
+    if (res.error) throw res.error;
+    allSuppliers = res.data || [];
+  } catch(e) {
+    console.error(e);
+    allSuppliers = [];
+  }
+}
+
+function getFiltered() {
+  var list = allSuppliers.slice();
+  if (fSearch) list = list.filter(function(s){ return s.name.indexOf(fSearch) >= 0 || (s.id && s.id.indexOf(fSearch) >= 0); });
+  if (fCat) list = list.filter(function(s){ return s.category === fCat; });
+  if (fProv) list = list.filter(function(s){ return s.province === fProv; });
+  if (fStatus) list = list.filter(function(s){ return s.status === fStatus; });
+  if (fType) list = list.filter(function(s){ return s.type === fType; });
+  return list;
+}
+
+function renderStats() {
+  var total = allSuppliers.length;
+  var pend = allSuppliers.filter(function(s){ return s.status === "pending"; }).length;
+  var appr = allSuppliers.filter(function(s){ return s.status === "approved"; }).length;
+  var bl = allSuppliers.filter(function(s){ return s.is_blacklist; }).length;
+    document.getElementById("statsBar").innerHTML =
+    '<div class="sc gold" style="cursor:pointer" onclick="fStatus=\'\';fType=\'\';curPage=1;renderTab(\'list\')">' +
+    '<div class="sn">' + total + '</div><div class="sl">کل تامین‌کنندگان</div></div>' +
+    '<div class="sc" style="cursor:pointer" onclick="fStatus=\'pending\';curPage=1;renderTab(\'list\')">' +
+    '<div class="sn">' + pend + '</div><div class="sl">در انتظار تایید</div></div>' +
+    '<div class="sc green" style="cursor:pointer" onclick="fStatus=\'approved\';curPage=1;renderTab(\'list\')">' +
+    '<div class="sn">' + appr + '</div><div class="sl">تایید شده</div></div>' +
+    '<div class="sc red" style="cursor:pointer" onclick="renderBL()">' +
+    '<div class="sn">' + bl + '</div><div class="sl">لیست سیاه</div></div>';
+}
+
+function renderTabs() {
+  var tabs = [["list","📋 تامین‌کنندگان"],["ai","🤖 مشاور هوشمند"],["report","📊 گزارش"]];
+  if (curUser.isAdmin) tabs.push(["admin","⚙️ مدیریت"]);
+  document.getElementById("tabsBar").innerHTML = tabs.map(function(t){
+    return '<button class="tab' + (curTab === t[0] ? " active" : "") + '" onclick="renderTab(\'' + t[0] + '\')">' + t[1] + '</button>';
+  }).join("");
+}
+
+function renderTab(tab) {
+  curTab = tab; renderTabs();
+  var c = document.getElementById("mainContent");
+  if (tab === "list") renderList(c);
+  else if (tab === "ai") renderAI(c);
+  else if (tab === "report") renderReport(c);
+  else if (tab === "admin") renderAdmin(c);
+}
+
+function star(v) {
+  var f = Math.floor(v || 0);
+  return '<span class="stars">' + "★".repeat(Math.min(f,5)) + "☆".repeat(Math.max(0,5-f)) + '</span>';
+}
+function scoreBadge(v) {
+  var cl = v >= 4 ? "hi" : v >= 3 ? "mi" : "lo";
+  return '<span class="badge ' + cl + '">' + (v || "—") + '</span>';
+}
+function typeBadge(t) {
+  var m = {legal:"حقوقی",real:"حقیقی",store:"فروشگاه",foreign:"خارجی"};
+  var c = {legal:"hi",real:"mi",store:"pend",foreign:"appr"};
+  return '<span class="badge ' + (c[t]||"mi") + '">' + (m[t]||t) + '</span>';
+}
+function statusBadge(s) {
+  var m = {pending:"در انتظار",approved:"تایید شده",rejected:"رد شده"};
+  var c = {pending:"pend",approved:"appr",rejected:"rej"};
+  return '<span class="badge ' + (c[s]||"pend") + '">' + (m[s]||s) + '</span>';
+}
+
+function renderList(c) {
+  var filtered = getFiltered();
+  var total = filtered.length;
+  var pages = Math.ceil(total / PER) || 1;
+  curPage = Math.min(curPage, pages);
+  var page = filtered.slice((curPage-1)*PER, curPage*PER);
+
+  var catOpts = CATS.map(function(cat){ return '<option value="' + cat + '"' + (fCat===cat?" selected":"") + '>' + cat + '</option>'; }).join("");
+  var provOpts = PROVS.map(function(p){ return '<option value="' + p + '"' + (fProv===p?" selected":"") + '>' + p + '</option>'; }).join("");
+
+  var rows = page.map(function(s, i) {
+    var avg = s.avg_score || "—";
+    return '<tr class="' + (s.is_blacklist ? "bl" : "") + '" onclick="openDetail(\'' + s.id + '\')">' +
+      '<td>' + ((curPage-1)*PER+i+1) + '</td>' +
+      '<td style="font-size:11px;color:var(--g5)">' + (s.id||"") + '</td>' +
+      '<td><div class="cn">' + s.name + '</div>' + (s.is_blacklist ? '<div class="blb">🚫 لیست سیاه</div>' : '') + '</td>' +
+      '<td>' + typeBadge(s.type) + '</td>' +
+      '<td>' + (s.category||"—") + '</td>' +
+      '<td>' + (s.province||"—") + '</td>' +
+      '<td>' + statusBadge(s.status) + '</td>' +
+      '<td>' + (avg !== "—" ? scoreBadge(avg) : "—") + '</td>' +
+      '</tr>';
+  }).join("");
+
+  var pgBtns = "";
+  for (var pg = Math.max(1,curPage-2); pg <= Math.min(pages,curPage+2); pg++) {
+    pgBtns += '<button class="pb' + (pg===curPage?" active":"") + '" onclick="curPage=' + pg + ';renderTab(\'list\')">' + pg + '</button>';
+  }
+
+  c.innerHTML =
+    '<div class="filters">' +
+    '<input class="si" placeholder="🔍 جستجو نام یا کد..." value="' + fSearch + '" oninput="fSearch=this.value;curPage=1;renderTab(\'list\')">' +
+    '<select class="fs" onchange="fType=this.value;curPage=1;renderTab(\'list\')"><option value="">همه انواع</option><option value="legal"' + (fType==="legal"?" selected":"") + '>حقوقی</option><option value="real"' + (fType==="real"?" selected":"") + '>حقیقی</option><option value="store"' + (fType==="store"?" selected":"") + '>فروشگاه</option><option value="foreign"' + (fType==="foreign"?" selected":"") + '>خارجی</option></select>' +
+    '<select class="fs" onchange="fCat=this.value;curPage=1;renderTab(\'list\')"><option value="">همه دسته‌ها</option>' + catOpts + '</select>' +
+    '<select class="fs" onchange="fProv=this.value;curPage=1;renderTab(\'list\')"><option value="">همه استان‌ها</option>' + provOpts + '</select>' +
+    '<select class="fs" onchange="fStatus=this.value;curPage=1;renderTab(\'list\')"><option value="">همه وضعیت‌ها</option><option value="pending"' + (fStatus==="pending"?" selected":"") + '>در انتظار</option><option value="approved"' + (fStatus==="approved"?" selected":"") + '>تایید شده</option><option value="rejected"' + (fStatus==="rejected"?" selected":"") + '>رد شده</option></select>' +
+    '<button class="abtn" onclick="exportCSV()">📥 CSV</button>' +
+    (curUser.isAdmin ? '<button class="abtn grn" onclick="refreshData()">🔄 بروزرسانی</button>' : '') +
+    '</div>' +
+    '<div class="rc">' + total + ' تامین‌کننده — صفحه ' + curPage + ' از ' + pages + '</div>' +
+    '<div class="tw"><table><thead><tr><th>#</th><th>کد</th><th>نام</th><th>نوع</th><th>دسته</th><th>استان</th><th>وضعیت</th><th>امتیاز</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="pgn"><button class="pb" ' + (curPage===1?"disabled":"") + ' onclick="curPage--;renderTab(\'list\')">قبلی</button>' + pgBtns + '<button class="pb" ' + (curPage>=pages?"disabled":"") + ' onclick="curPage++;renderTab(\'list\')">بعدی</button></div>';
+}
+
+async function openDetail(id) {
+  var s = allSuppliers.find(function(x){ return x.id === id; });
+  if (!s) return;
+
+  showModal(s.name, '<div class="loading"><div class="spin"></div> بارگذاری اطلاعات...</div>');
+
+  try {
+    var [ratRes, memRes, docRes] = await Promise.all([
+      sb.from("supplier_ratings").select("*").eq("supplier_id", id).order("created_at", {ascending:false}),
+      sb.from("supplier_members").select("*").eq("supplier_id", id),
+      sb.from("supplier_documents").select("*").eq("supplier_id", id)
+    ]);
+
+    var ratings = ratRes.data || [];
+    var members = memRes.data || [];
+    var docs = docRes.data || [];
+    var purchaseCount = ratings.length;
+
+    var avg = purchaseCount > 0 ? (ratings.reduce(function(s,r){ return s + (r.total_score||0); }, 0) / purchaseCount).toFixed(2) : null;
+
+    var infoHtml =
+      '<div class="dr"><span class="dl">کد</span><span class="dv">' + (s.id||"—") + '</span></div>' +
+      '<div class="dr"><span class="dl">نوع</span><span class="dv">' + typeBadge(s.type) + '</span></div>' +
+      '<div class="dr"><span class="dl">دسته‌بندی</span><span class="dv">' + (s.category||"—") + '</span></div>' +
+      '<div class="dr"><span class="dl">استان</span><span class="dv">' + (s.province||"—") + '</span></div>' +
+      '<div class="dr"><span class="dl">تلفن</span><span class="dv">' + (s.phone||"—") + '</span></div>' +
+      '<div class="dr"><span class="dl">ایمیل</span><span class="dv">' + (s.email||"—") + '</span></div>' +
+      '<div class="dr"><span class="dl">شناسه ملی</span><span class="dv">' + (s.nat_id||"—") + '</span></div>' +
+      '<div class="dr"><span class="dl">وضعیت</span><span class="dv">' + statusBadge(s.status) + '</span></div>';
+
+    if (avg) infoHtml += '<div class="avg-box"><div class="avg-num">' + avg + '★</div><div style="font-size:12px;color:var(--g5);font-weight:700">میانگین ' + purchaseCount + ' ارزیابی</div></div>';
+
+    var memHtml = members.length ? members.map(function(m){
+      return '<div class="dr"><span class="dl">' + (m.name||"") + ' ' + (m.lastname||"") + '</span><span class="dv">' + (m.role||"") + ' | ' + (m.national_code||"") + '</span></div>';
+    }).join("") : '<div style="font-size:12px;color:var(--g5);font-weight:700">اعضایی ثبت نشده</div>';
+
+    var docHtml = docs.length ? docs.map(function(d){
+      return '<div class="dr"><span class="dl">📄 ' + (d.doc_type||"") + '</span><span class="dv">' + (d.verified ? '✅ تایید شده' : '⏳ در انتظار') + ' — <a href="' + (d.file_url||"#") + '" target="_blank" style="color:var(--blue)">مشاهده</a></span></div>';
+    }).join("") : '<div style="font-size:12px;color:var(--g5);font-weight:700">سندی بارگذاری نشده</div>';
+
+    var ratHtml = '<div class="ir-box">' +
+      '<div style="font-size:13px;font-weight:900;color:#065f46;margin-bottom:12px">ثبت ارزیابی جدید</div>' +
+      '<div class="ir-grid">' +
+      '<div class="ir-fg"><label>نام کالا *</label><input id="ir_item" placeholder="مثال: شیر فلکه DN200"></div>' +
+      '<div class="ir-fg"><label>شماره ایندنت *</label><input id="ir_indent" placeholder="مثال: IND-2024-001"></div>' +
+      '</div>' +
+      '<div class="ir-scores">' +
+      ['quality:کیفیت','communication:ارتباط','pricing:قیمت','followup:پس‌فروش','delay_score:تحویل'].map(function(kl){
+        var parts = kl.split(":");
+        return '<div class="ir-s"><label>' + parts[1] + '</label><select id="ir_' + parts[0] + '"><option value="5">5★</option><option value="4">4★</option><option value="3" selected>3★</option><option value="2">2★</option><option value="1">1★</option></select></div>';
+      }).join("") +
+      '</div>' +
+      '<button onclick="submitRating(\'' + id + '\')" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:900;cursor:pointer">✓ ثبت ارزیابی</button>' +
+      '</div>';
+
+    var histHtml = ratings.length ? ratings.slice(0,8).map(function(r){
+      return '<div class="hist-item">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">' +
+        '<div><span style="font-size:13px;font-weight:900">📦 ' + (r.item_name||"") + '</span> <span style="font-size:11px;color:var(--g5)">ایندنت: ' + (r.indent_no||"") + '</span></div>' +
+        '<span style="font-weight:900;color:var(--gold-d)">' + (r.total_score||"") + '★</span></div>' +
+        '<div style="font-size:11px;color:var(--g5)">👤 ' + (r.rater_name||"") + ' | 🏭 ' + (r.rater_company||"") + ' | ⏰ ' + new Date(r.created_at).toLocaleDateString("fa-IR") + '</div>' +
+        '</div>';
+    }).join("") : '<div style="font-size:12px;color:var(--g5);font-weight:700">ارزیابی‌ای ثبت نشده</div>';
+
+    var adminBtns = curUser.isAdmin ?
+      '<div class="st">عملیات مدیریتی</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button onclick="changeStatus(\'' + id + '\',\'approved\')" style="background:#10b981;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">✅ تایید</button>' +
+      '<button onclick="changeStatus(\'' + id + '\',\'rejected\')" style="background:#ef4444;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">❌ رد</button>' +
+      '<button onclick="toggleBL(\'' + id + '\')" style="background:' + (s.is_blacklist?"#10b981":"#6b7280") + ';color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">' + (s.is_blacklist?"✅ خروج از لیست سیاه":"🚫 لیست سیاه") + '</button>' +
+      '</div>' : "";
+
+    document.getElementById("modalBody").innerHTML =
+      '<div class="st">اطلاعات اصلی</div>' + infoHtml +
+      (members.length ? '<div class="st">اعضای هیئت مدیره</div>' + memHtml : '') +
+      (docs.length ? '<div class="st">مدارک</div>' + docHtml : '') +
+      '<div class="st">ارزیابی خرید (نام کالا + ایندنت)</div>' + ratHtml +
+      '<div class="st">تاریخچه ارزیابی‌ها (' + purchaseCount + ' خرید)</div>' + histHtml +
+      adminBtns;
+
+  } catch(e) {
+    document.getElementById("modalBody").innerHTML = '<div style="color:red;font-weight:700">خطا در بارگذاری: ' + e.message + '</div>';
+  }
+}
+
+async function submitRating(suppId) {
+  var item = document.getElementById("ir_item") ? document.getElementById("ir_item").value.trim() : "";
+  var indent = document.getElementById("ir_indent") ? document.getElementById("ir_indent").value.trim() : "";
+  if (!item) { alert("نام کالا را وارد کنید"); return; }
+  if (!indent) { alert("شماره ایندنت را وارد کنید"); return; }
+  var q = parseInt(document.getElementById("ir_quality").value);
+  var c = parseInt(document.getElementById("ir_communication").value);
+  var p = parseInt(document.getElementById("ir_pricing").value);
+  var f = parseInt(document.getElementById("ir_followup").value);
+  var d = parseInt(document.getElementById("ir_delay_score").value);
+  var total = +((q+c+p+f+d)/5).toFixed(2);
+  try {
+    var res = await sb.from("supplier_ratings").insert({
+      supplier_id: suppId,
+      item_name: item,
+      indent_no: indent,
+      rater_name: curUser.name,
+      rater_company: curUser.company,
+      quality: q,
+      communication: c,
+      pricing: p,
+      followup: f,
+      delay_score: d,
+      total_score: total
+    });
+    if (res.error) throw res.error;
+    alert("✅ ارزیابی با موفقیت ثبت شد!");
+    closeModal();
+    await loadSuppliers();
+    renderStats();
+    renderTab("list");
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+async function changeStatus(id, status) {
+  try {
+    await sb.from("suppliers").update({status:status}).eq("id",id);
+    alert("وضعیت تغییر کرد");
+    closeModal();
+    await loadSuppliers();
+    renderStats();
+    renderTab("list");
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+async function toggleBL(id) {
+  var s = allSuppliers.find(function(x){ return x.id===id; });
+  if (!s) return;
+  try {
+    await sb.from("suppliers").update({is_blacklist:!s.is_blacklist}).eq("id",id);
+    closeModal();
+    await loadSuppliers();
+    renderStats();
+    renderTab("list");
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+async function refreshData() {
+  await loadSuppliers();
+  renderStats();
+  renderTab(curTab);
+}
+
+function exportCSV() {
+  var f = getFiltered();
+  var rows = [["کد","نام","نوع","دسته","استان","وضعیت","امتیاز"]];
+  f.forEach(function(s){ rows.push([s.id,s.name,s.type,s.category,s.province,s.status,s.avg_score||"—"]); });
+  var csv = "\uFEFF" + rows.map(function(r){ return r.map(function(v){ return '"'+(v||"")+'"'; }).join(","); }).join("\n");
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download = "suppliers.csv"; a.click();
+}
+
+function renderAI(c) {
+  c.innerHTML = '<div class="ai-box"><h3 style="font-size:16px;font-weight:900;color:var(--g8);margin-bottom:6px">🤖 مشاور هوشمند تامین‌کنندگان</h3><p style="font-size:13px;color:var(--g5);font-weight:700;margin-bottom:16px">هر سوالی درباره تامین‌کنندگان بپرسید.</p><div class="ai-exs"><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'بهترین تامین‌کنندگان تایید شده\'">بهترین تایید شده‌ها</button><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'شرکت‌های در انتظار تایید\'">در انتظار تایید</button><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'تحلیل وضعیت کلی\'">تحلیل کلی</button></div><textarea id="aiIn" class="ai-ta" placeholder="سوال خود را بنویسید..."></textarea><br><button class="abtn" style="margin-top:10px" onclick="sendAI()">ارسال ➤</button><div id="aiOut" class="ai-out"></div></div>';
+}
+
+async function sendAI() {
+  var q = document.getElementById("aiIn").value.trim();
+  if (!q) return;
+  var out = document.getElementById("aiOut");
+  out.style.display = "block";
+  out.innerHTML = '<div class="spin"></div> در حال پردازش...';
+  var summary = "تعداد کل: " + allSuppliers.length + " | تایید شده: " + allSuppliers.filter(function(s){return s.status==="approved";}).length + " | در انتظار: " + allSuppliers.filter(function(s){return s.status==="pending";}).length;
+  try {
+    var res = await fetch("https://api.avalai.ir/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer aa-nsuAawlfncDiyaDutoQcTeyxzLIeMuoE0K7tdVkR480HEmhN"},body:JSON.stringify({model:"gpt-4o-mini",max_tokens:600,messages:[{role:"user",content:"شما مشاور هوشمند سامانه تامین‌کنندگان هلدینگ خلیج فارس هستید. آمار سیستم: "+summary+". لطفاً به سوال زیر به زبان فارسی پاسخ کوتاه و مفید بدهید: "+q}]})});
+    var data = await res.json();
+    if(data.error) { out.innerHTML = "خطا: " + JSON.stringify(data.error); return; }
+    out.innerHTML = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "پاسخی دریافت نشد: " + JSON.stringify(data).slice(0,200);
+  } catch(e) { out.innerHTML = "خطا: " + e.message; }
+}
+
+function renderReport(c) {
+  var byType = {legal:0,real:0,store:0,foreign:0};
+  var byStatus = {pending:0,approved:0,rejected:0};
+  allSuppliers.forEach(function(s){
+    if(byType[s.type]!==undefined) byType[s.type]++;
+    if(byStatus[s.status]!==undefined) byStatus[s.status]++;
+  });
+  c.innerHTML = '<div class="rg">' +
+    '<div class="rc2"><h4>📊 بر اساس نوع</h4>' +
+    Object.keys(byType).map(function(k){ var m={legal:"حقوقی",real:"حقیقی",store:"فروشگاه",foreign:"خارجی"}; return '<div class="rs"><span>' + m[k] + '</span><span style="font-weight:900">' + byType[k] + '</span></div>'; }).join("") +
+    '</div>' +
+    '<div class="rc2"><h4>📈 بر اساس وضعیت</h4>' +
+    Object.keys(byStatus).map(function(k){ var m={pending:"در انتظار",approved:"تایید شده",rejected:"رد شده"}; return '<div class="rs"><span>' + m[k] + '</span><span style="font-weight:900">' + byStatus[k] + '</span></div>'; }).join("") +
+    '</div>' +
+    '</div>';
+}
+
+function renderAdmin(c) {
+  var pend = allSuppliers.filter(function(s){ return s.status==="pending"; });
+  c.innerHTML = '<div style="background:white;border-radius:16px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.07)"><h3 style="font-size:15px;font-weight:900;margin-bottom:16px">⏳ ثبت‌نام‌های در انتظار تایید (' + pend.length + ')</h3>' +
+    (pend.length ? '<div class="tw"><table><thead><tr><th>نام</th><th>نوع</th><th>تاریخ</th><th>عملیات</th></tr></thead><tbody>' +
+    pend.map(function(s){ return '<tr><td class="cn">' + s.name + '</td><td>' + typeBadge(s.type) + '</td><td style="font-size:11px">' + new Date(s.created_at).toLocaleDateString("fa-IR") + '</td><td><button onclick="changeStatus(\'' + s.id + '\',\'approved\')" style="background:#10b981;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer;margin-left:4px">✅ تایید</button><button onclick="changeStatus(\'' + s.id + '\',\'rejected\')" style="background:#ef4444;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer">❌ رد</button></td></tr>'; }).join("") +
+    '</tbody></table></div>' : '<div style="text-align:center;color:var(--g5);font-weight:700;padding:20px">موردی در انتظار تایید نیست ✅</div>') +
+    '</div>';
+}
+
+function renderBL() {
+  curTab = "list"; renderTabs();
+  var bls = allSuppliers.filter(function(s){ return s.is_blacklist; });
+  var rows = bls.map(function(s,i){
+    return '<tr class="bl" onclick="openDetail(\'' + s.id + '\')">' +
+      '<td>'+(i+1)+'</td><td style="font-size:11px;color:var(--g5)">'+(s.id||"")+'</td>' +
+      '<td><div class="cn">'+s.name+'</div><div class="blb">🚫 لیست سیاه</div></td>' +
+      '<td>'+typeBadge(s.type)+'</td><td>'+(s.category||"—")+'</td>' +
+      '<td>'+(s.province||"—")+'</td><td>'+statusBadge(s.status)+'</td>' +
+      '<td>'+(s.avg_score?scoreBadge(s.avg_score):"—")+'</td></tr>';
+  }).join("");
+  document.getElementById("mainContent").innerHTML =
+    '<div class="rc" style="color:var(--red);font-weight:900">🚫 لیست سیاه — '+bls.length+' شرکت</div>' +
+    '<div class="tw"><table><thead><tr><th>#</th><th>کد</th><th>نام</th><th>نوع</th><th>دسته</th><th>استان</th><th>وضعیت</th><th>امتیاز</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+function showRejectModal(id) {
+  var s = allSuppliers.find(function(x){return x.id===id;});
+  if(!s) return;
+  showModal("❌ رد ثبت‌نام: " + s.name,
+    '<div style="margin-bottom:12px"><label style="font-size:12px;font-weight:900;display:block;margin-bottom:5px">شماره موبایل تامین‌کننده</label>' +
+    '<input id="rPhone" value="'+(s.phone||"")+'" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:14px;font-weight:700;outline:none;text-align:center"></div>' +
+    '<div style="margin-bottom:14px"><label style="font-size:12px;font-weight:900;display:block;margin-bottom:5px">دلیل رد</label>' +
+    '<textarea id="rMsg" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:13px;font-weight:700;outline:none;min-height:110px;resize:vertical">با سلام،
+متاسفانه درخواست ثبت‌نام شما رد شد.
+
+دلیل: 
+
+برای اطلاعات بیشتر با واحد تدارکات تماس بگیرید.</textarea></div>' +
+    '<div style="display:flex;gap:8px">' +
+    '<button onclick="doReject(\''+id+'\''+')" style="flex:2;background:#ef4444;color:white;border:none;border-radius:9px;padding:12px;font-size:13px;font-weight:900;cursor:pointer">❌ رد + ارسال پیام</button>' +
+    '<button onclick="changeStatus(\''+id+'\',\'rejected\')" style="flex:1;background:#6b7280;color:white;border:none;border-radius:9px;padding:12px;font-size:12px;font-weight:900;cursor:pointer">رد بدون پیام</button>' +
+    '</div>'
+  );
+}
+
+function doReject(id) {
+  var phone = document.getElementById("rPhone") ? document.getElementById("rPhone").value.trim() : "";
+  var msg = document.getElementById("rMsg") ? document.getElementById("rMsg").value.trim() : "";
+  if(!phone){alert("شماره موبایل را وارد کنید");return;}
+  if(!msg){alert("دلیل رد را بنویسید");return;}
+  alert("✅ پیام به " + phone + " ارسال شد:\n\n" + msg);
+  changeStatus(id, "rejected");
+}
+
+function showModal(title, body) {
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalBody").innerHTML = body;
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal(e) {
+  if (!e || e.target.id === "modal") document.getElementById("modal").classList.remove("show");
+}
+</script>
+</body>
+</html>

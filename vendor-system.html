@@ -3,56 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سامانه مدیریت تامین‌کنندگان - هلدینگ خلیج فارس</title>
+<title>سامانه مدیریت تامین‌کنندگان - پتروشیمی نوری</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Vazirmatn",Tahoma,sans-serif;font-weight:700;background:#f8fafc;direction:rtl;min-height:100vh}
 button,input,select,textarea{font-family:"Vazirmatn",Tahoma,sans-serif;font-weight:700}
-:root{--gold:#f59e0b;--gold-d:#d97706;--g:#f3f4f6;--g2:#e5e7eb;--g5:#6b7280;--g8:#1f2937;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--r:12px}
+:root{--gold:#e6a817;--gold-d:#d97706;--navy:#1e3a5f;--navy-d:#0f2027;--g:#f3f4f6;--g2:#e5e7eb;--g5:#6b7280;--g8:#1f2937;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--r:12px}
 
 /* LOGIN */
-#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1e3a5f,#0f2027)}
+#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1e3a5f 0%,#0f2027 60%,#1a3a5c 100%)}
 .lbox{background:white;border-radius:20px;padding:40px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .llogo{text-align:center;margin-bottom:28px}
-.licon{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
-.llogo h1{font-size:19px;color:var(--g8);font-weight:900}
-.llogo p{font-size:13px;color:var(--g5);margin-top:4px}
+.llogo img{width:120px;height:120px;object-fit:contain;margin:0 auto 10px;display:block;transition:transform .25s ease;cursor:pointer}
+.llogo img:hover{transform:scale(1.9)}
+.llogo h1{font-size:18px;color:var(--g8);font-weight:900}
+.llogo p{font-size:12px;color:var(--g5);margin-top:4px}
 .fg{margin-bottom:14px}
 .fg label{display:block;font-size:13px;font-weight:900;color:#374151;margin-bottom:6px}
 .fg input,.fg select{width:100%;padding:11px 13px;border:1.5px solid var(--g2);border-radius:10px;font-size:14px;outline:none;transition:.2s;background:white}
 .fg input:focus,.fg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
-.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:white;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:white;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.lbtn:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(230,168,23,.4)}
 .lerr{background:#fee2e2;color:#dc2626;padding:10px;border-radius:8px;font-size:13px;margin-top:10px;display:none;font-weight:700}
 .lfoot{text-align:center;font-size:11px;color:#9ca3af;margin-top:16px}
-.reg-link{display:block;background:linear-gradient(135deg,#10b981,#059669);color:white;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:900;text-decoration:none;text-align:center;margin-top:14px;border-top:1px solid #e5e7eb;padding-top:16px}
+.reg-link{display:block;background:linear-gradient(135deg,#10b981,#059669);color:white;border-radius:10px;padding:14px;font-size:15px;font-weight:900;text-decoration:none;text-align:center;margin-top:10px;width:100%;box-sizing:border-box}
+.captcha-box{background:#f8fafc;border:1.5px solid var(--g2);border-radius:10px;padding:14px;margin-bottom:14px;text-align:center}
+.captcha-q{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:10px;letter-spacing:2px}
+.captcha-inp{width:100%;padding:10px;border:1.5px solid var(--g2);border-radius:8px;font-size:16px;text-align:center;font-weight:900;outline:none}
+.captcha-inp:focus{border-color:var(--gold)}
+
+/* GLOBAL HEADER LOGO */
+.top-logo-bar{background:linear-gradient(135deg,var(--navy),var(--navy-d));padding:8px 20px;display:flex;align-items:center;gap:10px}
+.top-logo-bar img{width:48px;height:48px;object-fit:contain}
+.top-logo-bar span{color:white;font-size:14px;font-weight:900}
 
 /* APP */
 #app{display:none}
-.hdr{background:white;border-bottom:2px solid var(--gold);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.hdr{background:linear-gradient(135deg,#1e3a5f,#0f2027);border-bottom:2px solid var(--gold);padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.07)}
 .hdr-in{display:flex;align-items:center;justify-content:space-between;height:64px}
 .hdr-left{display:flex;align-items:center;gap:12px}
-.hicon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.hdr-left h1{font-size:15px;font-weight:900;color:var(--g8)}
-.hdr-left p{font-size:11px;color:var(--g5)}
+.hdr-logo{width:44px;height:44px;object-fit:contain;transition:transform .25s ease}
+.hdr-logo:hover{transform:scale(2);cursor:pointer}
+.hdr-left h1{font-size:15px;font-weight:900;color:white}
+.hdr-left p{font-size:11px;color:rgba(255,255,255,.7)}
 .ubadge{background:var(--g);border-radius:20px;padding:6px 12px;font-size:12px;color:var(--g5);font-weight:700}
 .ubadge.adm{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:white}
 .logout{background:none;border:1.5px solid var(--g2);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--g5);cursor:pointer}
 
-.stats{display:flex;gap:12px;padding:16px 24px;background:white;border-bottom:1px solid var(--g);overflow-x:auto}
-.sc{flex:1;min-width:120px;background:#f9fafb;border-radius:12px;padding:14px 16px;border:1.5px solid var(--g)}
+.stats{display:flex;gap:8px;padding:12px 24px;background:white;border-bottom:1px solid var(--g);overflow-x:auto}
+.sc{flex:1;min-width:90px;background:#f9fafb;border-radius:10px;padding:10px 12px;border:1.5px solid var(--g);cursor:pointer;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.sc:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.13)}
 .sc.gold{background:#fffbeb;border-color:#fde68a}
 .sc.green{background:#f0fdf4;border-color:#bbf7d0}
 .sc.red{background:#fef2f2;border-color:#fecaca}
-.sn{font-size:24px;font-weight:900;color:var(--g8)}
+.sc.black{background:#1a1a1a;border-color:#000}
+.sc.darkred{background:#fef2f2;border-color:#fca5a5}
+.sn{font-size:20px;font-weight:900;color:var(--g8)}
 .sc.gold .sn{color:var(--gold-d)}
 .sc.green .sn{color:var(--green)}
-.sc.red .sn{color:var(--red)}
-.sl{font-size:11px;color:var(--g5);margin-top:2px;font-weight:700}
+.sc.red .sn{color:#dc2626}
+.sc.black .sn{color:white}
+.sc.darkred .sn{color:#dc2626}
+.sl{font-size:10px;color:var(--g5);margin-top:2px;font-weight:700}
+.sc.black .sl{color:rgba(255,255,255,.7)}
 
 .tabs{display:flex;gap:4px;padding:12px 24px;background:white;border-bottom:1px solid var(--g);overflow-x:auto}
-.tab{padding:8px 16px;border-radius:8px;border:none;font-size:13px;font-weight:900;background:none;color:var(--g5);white-space:nowrap;cursor:pointer}
+.tab{padding:8px 16px;border-radius:8px;border:none;font-size:13px;font-weight:900;background:none;color:var(--g5);white-space:nowrap;cursor:pointer;transition:transform .2s}
+.tab:hover{transform:scale(1.08)}
 .tab.active{background:var(--gold);color:white}
 
 .content{padding:20px 24px;max-width:1400px;margin:0 auto}
@@ -63,14 +82,18 @@ button,input,select,textarea{font-family:"Vazirmatn",Tahoma,sans-serif;font-weig
 .abtn{padding:10px 16px;background:var(--gold);color:white;border:none;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer}
 .abtn.sec{background:var(--g8)}
 .abtn.grn{background:var(--green)}
+.abtn.blue{background:var(--blue)}
 
 .tw{overflow-x:auto;border-radius:12px;border:1.5px solid var(--g)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{background:#f9fafb;padding:10px 12px;text-align:right;color:var(--g5);font-weight:900;border-bottom:1.5px solid var(--g);white-space:nowrap}
-td{padding:10px 12px;border-bottom:1px solid #f9fafb;vertical-align:middle}
-tr:hover td{background:#f9fafb;cursor:pointer}
+td{padding:10px 12px;border-bottom:1px solid #f9fafb;vertical-align:middle;transition:color .15s,background .15s}
+tr{transition:transform .15s}
+tr:hover{transform:scale(1.012)}
+tr:hover td{background:#fffbeb !important;cursor:pointer;color:#e6a817 !important;font-weight:900}
+tr:hover .cn{color:#e6a817 !important}
+.cn{color:#1e3a5f;font-weight:900;transition:color .15s}
 tr.bl td{background:#fef2f2}
-.cn{font-weight:900;color:var(--blue)}
 tr.bl .cn{color:var(--red)}
 .badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:900}
 .badge.hi{background:#d1fae5;color:#065f46}
@@ -78,9 +101,10 @@ tr.bl .cn{color:var(--red)}
 .badge.lo{background:#fee2e2;color:#991b1b}
 .badge.pend{background:#dbeafe;color:#1e40af}
 .badge.appr{background:#d1fae5;color:#065f46}
-.badge.rej{background:#fee2e2;color:#991b1b}
+.badge.rej{background:#dc2626;color:white;font-weight:900}
+.badge.bl-badge{background:#1a1a1a;color:white;font-weight:900}
 .stars{color:var(--gold);font-size:12px}
-.blb{background:#fee2e2;color:var(--red);border:1px solid #fca5a5;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:900}
+.blb{background:#1a1a1a;color:white;border:1px solid #000;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:900}
 .pgn{display:flex;gap:6px;margin-top:16px;justify-content:center;flex-wrap:wrap}
 .pb{padding:7px 12px;border-radius:8px;border:1.5px solid var(--g2);background:white;font-size:13px;font-weight:700;cursor:pointer}
 .pb.active{background:var(--gold);border-color:var(--gold);color:white}
@@ -102,15 +126,13 @@ tr.bl .cn{color:var(--red)}
 .dr:last-child{border:none}
 .dl{font-size:13px;color:var(--g5);font-weight:700}
 .dv{font-size:13px;font-weight:900;color:var(--g8)}
+.ltr-val{direction:ltr;text-align:left;word-break:break-all}
 .st{font-size:13px;font-weight:900;color:#374151;margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--gold)}
 .ir-box{background:#f0fdf4;border-radius:12px;padding:16px;border:2px solid #86efac;margin-bottom:12px}
 .ir-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .ir-fg{display:flex;flex-direction:column;gap:4px}
 .ir-fg label{font-size:11px;font-weight:900;color:#374151}
 .ir-fg input,.ir-fg select{padding:8px 10px;border:1.5px solid #d1fae5;border-radius:8px;font-size:13px;font-weight:700;outline:none}
-.ir-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
-.ir-s label{font-size:10px;font-weight:900;color:#374151;display:block;text-align:center;margin-bottom:4px}
-.ir-s select{width:100%;padding:5px 4px;border:1.5px solid #d1fae5;border-radius:6px;font-size:12px;font-weight:700;text-align:center}
 .hist-item{background:#f9fafb;border-radius:10px;padding:10px 12px;margin-bottom:6px;border-right:3px solid var(--gold)}
 .avg-box{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fde68a;border-radius:12px;padding:12px 16px;text-align:center;margin:12px 0}
 .avg-num{font-size:32px;font-weight:900;color:var(--gold-d)}
@@ -129,29 +151,49 @@ tr.bl .cn{color:var(--red)}
 .rc2{background:white;border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.07);border-top:3px solid var(--gold)}
 .rc2 h4{font-size:14px;font-weight:900;color:#374151;margin-bottom:12px}
 .rs{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:13px;font-weight:700}
+
+/* EXCEL IMPORT */
+.excel-box{background:white;border-radius:16px;padding:24px;box-shadow:0 4px 15px rgba(0,0,0,.08);max-width:600px}
+.drop-area{border:2.5px dashed #d1fae5;border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:.2s;background:#f0fdf4}
+.drop-area:hover{border-color:var(--green);background:#d1fae5}
+
+/* === WATERMARK === */
+.page-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background-repeat:no-repeat;background-position:center;background-size:contain;opacity:0.04;pointer-events:none;z-index:0}
+
+/* === انیمیشن کتابی === */
+@keyframes bookFlipIn{0%{transform:perspective(900px) rotateY(-90deg) scale(0.85);opacity:0}60%{transform:perspective(900px) rotateY(8deg) scale(1.02);opacity:1}100%{transform:perspective(900px) rotateY(0deg) scale(1);opacity:1}}
+.book-flip-in{animation:bookFlipIn 0.45s cubic-bezier(.4,0,.2,1) both}
+.clickable-text{cursor:pointer;display:inline-block;transition:transform .2s ease}
+.clickable-text:hover{transform:scale(1.08)}
 </style>
 </head>
 <body>
 
+<div class="page-watermark" id="pageWatermark" style="display:none"></div>
+
 <div id="loginPage">
   <div class="lbox">
     <div class="llogo">
-      <div class="licon">⚙️</div>
-      <h1>سامانه مدیریت تامین‌کنندگان</h1>
-      <p>هلدینگ خلیج فارس</p>
+      <img id="loginLogoImg" src="" alt="پتروشیمی نوری">
+      <h1 class="clickable-text" onclick="doBookFlip(this)" style="color:#1e3a5f;font-size:22px;font-weight:900;margin-top:6px">پتروشیمی نوری</h1>
+      <p class="clickable-text" onclick="doBookFlip(this)" style="font-size:13px;color:#6b7280;margin-top:4px;font-weight:700">سامانه مدیریت تامین‌کنندگان</p>
     </div>
     <div class="fg">
-      <label>انتخاب شرکت / پتروشیمی</label>
-      <select id="selCo" onchange="onCoChange()">
-        <option value="">-- ابتدا شرکت را انتخاب کنید --</option>
-        <option value="__admin__">👑 مدیریت سیستم (ادمین)</option>
+      <label>انتخاب کارمند</label>
+      <select id="selEmp" onchange="onEmpChange()">
+        <option value="">-- ابتدا کارمند را انتخاب کنید --</option>
+        <option value="__admin__">👑 بررسی منابع</option>
       </select>
     </div>
     <div id="extraFields"></div>
+    <div class="captcha-box" id="captchaBox" style="display:none">
+      <div class="captcha-q" id="captchaQ"></div>
+      <input class="captcha-inp" id="captchaAns" placeholder="جواب را وارد کنید" type="number">
+    </div>
     <div id="lerr" class="lerr"></div>
-    <button class="lbtn" onclick="doLogin()">ورود به سامانه</button>
-    <a href="register.html" target="_blank" class="reg-link">🏭 ثبت‌نام شرکت‌های جدید جهت ورود به لیست منابع هلدینگ خلیج فارس</a>
-    <div class="lfoot">تمامی حقوق محفوظ است — هلدینگ خلیج فارس ۱۴۰۴</div>
+    <button class="lbtn" onclick="doLogin()">ورود کارکنان</button>
+    <a href="supplier-register.html" class="reg-link clickable-text" onclick="doBookFlip(this)">🏭 ثبت‌نام / ورود تامین‌کنندگان</a>
+    <div class="lfoot">تمامی حقوق محفوظ است — پتروشیمی نوری ۱۴۰۴</div>
   </div>
 </div>
 
@@ -159,8 +201,8 @@ tr.bl .cn{color:var(--red)}
   <div class="hdr">
     <div class="hdr-in">
       <div class="hdr-left">
-        <div class="hicon">⚙️</div>
-        <div><h1>سامانه متمرکز مدیریت تامین و منابع</h1><p>هلدینگ خلیج فارس</p></div>
+        <img class="hdr-logo" id="hdrLogoImg" src="" alt="نوری">
+        <div><h1>سامانه متمرکز مدیریت تامین و منابع</h1><p>پتروشیمی نوری</p></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="ubadge" id="userBadge"></span>
@@ -181,17 +223,45 @@ tr.bl .cn{color:var(--red)}
 </div>
 
 <script>
+// === LOGO ===
+var LOGO_DATA = "iVBORw0KGgoAAAANSUhEUgAAAUoAAAFvCAMAAAAblnKyAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAASYSYuf+pUQCAAfmUAE5PUv++vjSoT/y/TjQ2OIKDhcHBwvy0MTJSivvAUaKjpP7+/vqvIgcvcmVmaMrKyy5Ph/3Sg2rGjePj4wAWYPuzL2uCqvzBV0xpmba2txg9e/u6P2eAqaPcudHY5QagQInSpP/36AAjaf7Agv7muvqfDPzKbllaXHR1d5OTlcrr1/3bnPyxKACVKyGpU/7KcSIkJyRIgvusG1G0aPu3OKOyy+bn55KjwbXB1UdIS1p0of//fPzAUz1ckK6ur7TixQAobf7v0gAKWcvU4fy8Rw81dWxtb/7DW1rAgXSKsPu/Tv+pqfqlBvHz8+Xp8JnYsXvNmtfd6Pu6QhCjRx1CfvyzLvu/TTu1adrx4/zEXL3I2l9gYv3gq/qsGwCOGwGdOqu5z/7TaYiJigAbZOL06fvEW/7VjBtAfdPT1JmZm5qqxf7HZvuvJGF6pcLo0KipqvqpEvzDXNrb2/7cmPzAUj9AQwUscP7OeuDl7URhlFVWWHBxc32Stf7syxylSvy6P/7Kb/uhAPqcAPu9SiWsWP3VjPu7QpDVqgAfZ+nt8v7Fb2K9eiBDfv3OeRE3d/vCWTKxYvX3+FO+eypMhYuevfqnCzlXjfqsG/7Wk2lqbAcnbAACUnPJkrvlyg02dwARXfy9SACZMUxNUPvOeKi1zVNunfu2NPu3OXl6fLu8vfu9S/7Kb/3FYAsycxQ6ef7HZPu3O9Lu3ACSJNvh66XatRZAfvumCEO3b/u3N3CHrfzJafu6QMPN3f7RgP7jsurq64PPnhOlSzmzZWZ+qPuuJfzCV/zGY/yyLPzHY///vvvGYgCIEPzCWOr37v3Yk//y2/7pwhctcP7GV1xdX+jb+WHDho2OjyuuXf7dnw4pbfuwJavfv2FiZRanTlFSVbnE1/zAU/7HZP3do7C80u7w9DtOhyBFgBmoT8bGx7j1wEhllkq7dQuiRf7SgG5vcZ2tx/7RgXiOsvqoD31+gDVXjf7NdLKztM7Pz52en/7gsQAAAJVyNcAAAAEAdFJOU///Av///wP/rf///6//VP//4/////////////8q////gf////////8F///////////K//8y///+/5n///////8B//////////9x//8j//9LAvX//////////7mb//9+////6v///wb///9TNP////8s3P///+7//w9s//8W/////////70g//+B//+Z////Cf////9I///////1//Eh/////////2L//0b//82u////E5v//zb//////////6P/X4v/Cf////////o6/8JuA0T/jf//////E///////L//S//////9fIP//////////////Iv//Nf/+//8N////IAChqF4CAAAACXBIWXMAAA7DAAAOwwHHb6hkAABDA0lEQVR4Xu2df0AU17n35VbeXjHWCWhktbiJqHtVQIMtVIJS0QkEinlfVHRzpaJiGXsXrUq1cauAaXajcWiVuuLVElSKVxs1d7dB0zU2NPgj0XvjRW256H0VsVXu6lWrdUzVd99zZs7szuyemZ2dnV1I6ucPXZZlf3z3Oc95nuc850wf91M04qmUmvFUSs14KqVmPJVSM55KqRlPpdSMp1JqxlMpNeOplJrxVErNeCqlZjyVUjOeSqkZvVnK77z6yvOTnjlzefmzC59dfvnMM5M+euXV76Df9UJ6qZR/ePWj15anM4j0dO/NZ1/76NU/oEf1LnqjlJ8+f2YnKxsW+IsXn/8UPbYX0euk/PSty0AtJJsUQM7lH/U2NXuXlD99/QzjDKQjB3jci6+/h/6uV9CbpPzO2wsV6sjBOHe+/XX0t72A3iPlD94OOK79YZh3f43+vsfpLVL+6W3GieQJDicz6U/oOXqYXiLlKzvVCQlxpj//PfQ0PUqvkPLVy0H5SD+cz/4RPVNP0guk/PUzoQkJYJyvfYaerefocSnfm6RitvGHYT7saZfZ01K+vlC9kxTj3PkWes4eomel/HmITlIE41z+ffS8PUJPSvmdZzQZ214Y5rUejDJ7TsrvvaUykpTDybz9V/T8EafHpHz9We2FhDgXvoJeIdL0kJSfvaihkxTDOC//HL1KZOkRKd/8UGMnKYZhnvkBeqVI0gNSfvstkOuFF2f6R5F3mZGX8mvLFYxthnFaIFYAe0Nw06nEpJ0Lf4leL2JEWspPz8gLwUDRLBYmfeicQ6tOj9vy3MZz5yZcv359woRzG5/bMu70qkNzhsIHQVnln4h5McIuM7JS/limJgn1sTjT31+1ZeP1MS+PJqQZ/fKY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";
+document.getElementById("loginLogoImg").src = "data:image/png;base64," + LOGO_DATA;
+document.getElementById("hdrLogoImg").src = "data:image/png;base64," + LOGO_DATA;
+
+// تابع انیمیشن کتابی
+function doBookFlip(el) {
+  if (!el) return;
+  el.classList.remove("book-flip-in");
+  void el.offsetWidth;
+  el.classList.add("book-flip-in");
+  setTimeout(function(){ el.classList.remove("book-flip-in"); }, 500);
+}
+
+// helper: تبدیل NOPC- به PGFH- برای دیتابیس
+function toDbId(id) {
+  if (!id) return id;
+  return id.startsWith("NOPC-") ? id.replace("NOPC-", "PGFH-") : id;
+}
+
 // === SUPABASE CONFIG ===
 var SB_URL = "https://pecjezkkpmwjfgcaixfd.supabase.co";
 var SB_KEY = "sb_publishable_S57NuoqV-ajhV97TOYkWpg_Mg38Et7A";
-var sb = null;
+var sb;
+try {
+  if (typeof supabase !== "undefined" && supabase.createClient) {
+    sb = supabase.createClient(SB_URL, SB_KEY);
+  } else if (typeof window.supabase !== "undefined") {
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
+  }
+} catch(e) { console.error("Supabase init error:", e); }
 
-// === COMPANIES ===
 var CATS = ["لوله و اتصالات","فلنج","ولو و شیرآلات","پمپ و کمپرسور","مواد شیمیایی","قطعات یدکی","ابزار دقیق","برق صنعتی","تجهیزات ایمنی","خدمات مهندسی","ملزومات اداری","تجهیزات سرمایه‌ای"];
 var PROVS = ["تهران","اصفهان","خوزستان","فارس","البرز","مازندران","خراسان رضوی","آذربایجان شرقی","گیلان","کرمان","بوشهر","سیستان و بلوچستان"];
+
 var ADMIN_USER = "hoomankhoshbin";
 var ADMIN_PASS = "3304024";
 
+// کارکنان پتروشیمی نوری
 function mkEmps(pfx, names) {
   return names.map(function(n, i) {
     var c = pfx + String(101+i).padStart(3,"0");
@@ -199,58 +269,57 @@ function mkEmps(pfx, names) {
   });
 }
 
-var COMPANIES = {
-  "پتروشیمی اروند":{emps:mkEmps("AR",["علی محمدی","حسن رضایی","فاطمه احمدی","محمد کریمی","زهرا موسوی","رضا نجفی","مریم صادقی","امیر علوی","سارا قاسمی","جواد حسینی"])},
-  "پتروشیمی بندر امام":{emps:mkEmps("BI",["رضا حسینی","مریم صادقی","امیر علوی","سارا قاسمی","جواد نجفی","لیلا رستمی","کاوه مرادی","شیرین کمالی","وحید صفری","نسرین فرهادی"])},
-  "پتروشیمی بوعلی سینا":{emps:mkEmps("BS",["محسن اکبری","نسرین فرهادی","داود منصوری","الهام رحیمی","سیامک جعفری","مینا طاهری","رسول غلامی","آزاده ولی‌پور","مجید صالحی","زینب امیری"])},
-  "پتروشیمی خوزستان":{emps:mkEmps("KZ",["حمید زارعی","مینا طاهری","رسول غلامی","آزاده ولی‌پور","مجید صالحی","زینب امیری","کاوه مرادی","عباس نظری","راحله کاظمی","فرهاد معینی"])},
-  "پتروشیمی شهید تندگویان":{emps:mkEmps("TN",["عباس نظری","راحله کاظمی","فرهاد معینی","تهمینه جوادی","سعید یوسفی","مهسا رستگار","ندا حیدری","بهزاد مرادی","شیرین کمالی","وحید صفری"])},
-  "پتروشیمی کارون":{emps:mkEmps("KR",["مصطفی ابراهیمی","فریده حسن‌زاده","ناصر قربانی","معصومه رضوی","علیرضا خانی","کمال شهبازی","فروغ محمودی","حیدر قنبری","سودابه نوری","مهران خسروی"])},
-  "پتروشیمی آریا ساسول":{emps:mkEmps("AS",["کمال شهبازی","فروغ محمودی","حیدر قنبری","سودابه نوری","مهران خسروی","روناک احمدی","شاهین رضایی","منیژه کریمی","یوسف محمدی","آرزو صادقی"])},
-  "پتروشیمی پارس":{emps:mkEmps("PR",["شاهین رضایی","منیژه کریمی","یوسف محمدی","آرزو صادقی","نادر حیدری","مژگان علی‌پور","پرویز اسدی","گلناز طالبی","سهراب میرزایی","دلارام وطن‌دوست"])},
-  "پتروشیمی نوری":{emps:mkEmps("NR",["پرویز اسدی","گلناز طالبی","سهراب میرزایی","دلارام وطن‌دوست","امیرحسین رضوی","صبا امینی","آرش تهرانی","شادی کوهستانی","بهرام سلیمانی","پگاه رنجبر"])},
-  "پتروشیمی هنگام فاز ۱":{emps:mkEmps("HF",["آرش تهرانی","شادی کوهستانی","بهرام سلیمانی","پگاه رنجبر","کیوان فضلی","حسین علیزاده","زیبا کریمی","رامین صادقی","ترانه موسوی","فریبرز احمدی"])},
-  "پالایش گاز بیدبلند":{emps:mkEmps("BB",["حسین علیزاده","زیبا کریمی","رامین صادقی","ترانه موسوی","فریبرز احمدی","لادن رضایی","منوچهر حسینی","آناهیتا غلامی","فرزاد مرادی","سیما جعفری"])},
-  "پالایش گاز هویزه":{emps:mkEmps("HV",["منوچهر حسینی","آناهیتا غلامی","فرزاد مرادی","سیما جعفری","بهنام قاسمی","صادق محمودی","مهتاب کاظمی","ارسلان رحیمی","شبنم اکبری","مسعود طاهری"])},
-  "پتروشیمی گچساران":{emps:mkEmps("GC",["صادق محمودی","مهتاب کاظمی","ارسلان رحیمی","شبنم اکبری","مسعود طاهری","کورش ابراهیمی","فاطمه زارعی","بابک منصوری","لیلا حیدری","پویا رستمی"])},
-  "پتروشیمی ارومیه":{emps:mkEmps("UR",["کورش ابراهیمی","فاطمه زارعی","بابک منصوری","لیلا حیدری","پویا رستمی","داریوش قربانی","سحر محمدی","نیما کریمی","الناز حسینی","شهرام رضایی"])},
-  "پتروشیمی ایلام":{emps:mkEmps("IL",["داریوش قربانی","سحر محمدی","نیما کریمی","الناز حسینی","شهرام رضایی","مریم جوادی","بهروز اسدی","ویدا مرادی","سجاد علوی","نادیا صادقی"])},
-  "مبین انرژی خلیج فارس":{emps:mkEmps("MB",["کیارش حسنی","مینا رحیمی","پژمان اکبری","سانا موسوی","مهدی طاهری","فرناز ابراهیمی","یاسر محمدی","شیدا رضایی","فرشاد کریمی","نیوشا جعفری"])},
-  "فجر انرژی خلیج فارس":{emps:mkEmps("FJ",["یاسر محمدی","شیدا رضایی","فرشاد کریمی","نیوشا جعفری","امید صالحی","نصرت حیدری","آسیه مرادی","سامان قاسمی","ریحانه علیزاده","کاملیا نجفی"])},
-  "پتروشیمی آپادانا":{emps:mkEmps("AP",["نصرت حیدری","آسیه مرادی","سامان قاسمی","ریحانه علیزاده","کاملیا نجفی","محمدرضا صادقی","فرزانه کاظمی","علی‌اکبر رستمی","نگار موسوی","حسنعلی رحیمی"])},
-  "ستاد هلدینگ":{emps:mkEmps("HQ",["مدیر تدارکات","کارشناس ارشد خرید","مسئول قراردادها","رئیس ارزیابی","کارشناس ارزیابی","ناظر کیفیت","مسئول لجستیک","کارشناس حقوقی","مدیر مالی","کارشناس فناوری"])}
-};
+var EMPLOYEES = mkEmps("NR", [
+  "هومن خوشبین فر",
+  "مهدی طحان نظیف",
+  "علی محمدی",
+  "حسن رضایی",
+  "فاطمه احمدی",
+  "محمد کریمی",
+  "زهرا موسوی",
+  "رضا نجفی",
+  "مریم صادقی",
+  "امیر علوی",
+  "سارا قاسمی",
+  "جواد حسینی",
+  "لیلا رستمی",
+  "کاوه مرادی",
+  "شیرین کمالی",
+  "وحید صفری",
+  "نسرین فرهادی"
+]);
 
-var curUser = null;
-var curTab = "list";
-var fSearch = "", fCat = "", fProv = "", fStatus = "", fType = "", curPage = 1, PER = 15;
-var allSuppliers = [];
-var API_KEY = "aa-nsuAawlfncDiyaDutoQcTeyxzLIeMuoE0K7tdVkR480HEmhN";
+var CAPTCHA_A = 0, CAPTCHA_B = 0;
+function genCaptcha() {
+  CAPTCHA_A = Math.floor(Math.random()*20)+1;
+  CAPTCHA_B = Math.floor(Math.random()*20)+1;
+  var el = document.getElementById("captchaQ");
+  if(el) el.textContent = CAPTCHA_A + " + " + CAPTCHA_B + " = ?";
+  var ans = document.getElementById("captchaAns");
+  if(ans) ans.value = "";
+}
 
-// Populate company dropdown
-document.addEventListener("DOMContentLoaded", function(){
-  // Init Supabase
-  try {
-    sb = window.supabase ? window.supabase.createClient(SB_URL, SB_KEY) : null;
-  } catch(e) { console.error("SB:", e); }
-  var sel = document.getElementById("selCo");
-  if(!sel) return;
-  Object.keys(COMPANIES).forEach(function(k){
+// Populate employee dropdown
+(function(){
+  var sel = document.getElementById("selEmp");
+  EMPLOYEES.forEach(function(e){
     var o = document.createElement("option");
-    o.value = k; o.textContent = k; sel.appendChild(o);
+    o.value = e.personnel; o.textContent = e.name + " (" + e.personnel + ")"; sel.appendChild(o);
   });
-});
+})();
 
-function onCoChange() {
-  var v = document.getElementById("selCo").value;
+function onEmpChange() {
+  var v = document.getElementById("selEmp").value;
   var ef = document.getElementById("extraFields");
-  if (!v) { ef.innerHTML = ""; return; }
+  var cb = document.getElementById("captchaBox");
+  if (!v) { ef.innerHTML = ""; cb.style.display="none"; return; }
   if (v === "__admin__") {
     ef.innerHTML = '<div class="fg"><label>نام کاربری</label><input id="aUser" placeholder="نام کاربری"></div><div class="fg"><label>رمز عبور</label><input type="password" id="aPass" placeholder="رمز عبور"></div>';
+    cb.style.display="none";
   } else {
-    var emps = COMPANIES[v].emps;
-    var opts = '<option value="">انتخاب کنید</option>' + emps.map(function(e){ return '<option value="' + e.personnel + '">' + e.name + ' (' + e.personnel + ')</option>'; }).join("");
-    ef.innerHTML = '<div class="fg"><label>نام کارمند</label><select id="selEmp">' + opts + '</select></div><div class="fg"><label>رمز عبور (= شماره پرسنلی)</label><input type="password" id="empPass" placeholder="شماره پرسنلی"></div>';
+    ef.innerHTML = '<div class="fg"><label>رمز عبور (= شماره پرسنلی)</label><input type="password" id="empPass" placeholder="شماره پرسنلی"></div>';
+    cb.style.display="block";
+    genCaptcha();
   }
 }
 
@@ -261,41 +330,50 @@ function showErr(msg) {
 }
 
 function doLogin() {
-  var co = document.getElementById("selCo").value;
-  if (!co) { showErr("شرکت را انتخاب کنید"); return; }
-  if (co === "__admin__") {
+  var v = document.getElementById("selEmp").value;
+  if (!v) { showErr("کارمند را انتخاب کنید"); return; }
+  if (v === "__admin__") {
     var u = document.getElementById("aUser") ? document.getElementById("aUser").value.trim() : "";
     var p = document.getElementById("aPass") ? document.getElementById("aPass").value.trim() : "";
     if (u === ADMIN_USER && p === ADMIN_PASS) {
-      curUser = {name:"مدیر سیستم", personnel:"0000", isAdmin:true, company:"ستاد هلدینگ خلیج فارس"};
+      curUser = {name:"بررسی منابع", personnel:"0000", isAdmin:true, company:"پتروشیمی نوری"};
       startApp();
     } else { showErr("نام کاربری یا رمز اشتباه است"); }
     return;
   }
-  var selEmp = document.getElementById("selEmp");
+  // captcha check
+  var ans = document.getElementById("captchaAns") ? parseInt(document.getElementById("captchaAns").value) : NaN;
+  if (isNaN(ans) || ans !== CAPTCHA_A + CAPTCHA_B) { showErr("جواب تست امنیتی اشتباه است"); genCaptcha(); return; }
   var empPass = document.getElementById("empPass");
-  if (!selEmp || !selEmp.value) { showErr("نام کارمند را انتخاب کنید"); return; }
   if (!empPass || !empPass.value) { showErr("رمز عبور را وارد کنید"); return; }
-  var personnel = selEmp.value;
   var pass = empPass.value.trim();
-  var emps = COMPANIES[co].emps;
-  var emp = emps.find(function(e){ return e.personnel === personnel; });
+  var emp = EMPLOYEES.find(function(e){ return e.personnel === v; });
   if (!emp || emp.pass !== pass) { showErr("رمز عبور اشتباه است"); return; }
-  curUser = {name:emp.name, personnel:emp.personnel, isAdmin:false, company:co};
+  curUser = {name:emp.name, personnel:emp.personnel, isAdmin:false, company:"پتروشیمی نوری"};
   startApp();
 }
 
-async function doLogout() {
+function doLogout() {
   curUser = null;
   document.getElementById("loginPage").style.display = "flex";
   document.getElementById("app").style.display = "none";
+  var wm = document.getElementById("pageWatermark");
+  if (wm) wm.style.display = "none";
 }
 
-async async function startApp() {
+var curUser = null;
+var curTab = "list";
+var fSearch = "", fCat = "", fProv = "", fStatus = "", fType = "", fBlacklist = false, curPage = 1, PER = 15;
+var allSuppliers = [];
+var API_KEY = "aa-fYqbhO2PX44WeC69wOWYsJnylMUKcUkb47ut8Mg2JhPjmUqt";
+
+async function startApp() {
   document.getElementById("loginPage").style.display = "none";
   document.getElementById("app").style.display = "block";
+  var wm = document.getElementById("pageWatermark");
+  if (wm) { wm.style.backgroundImage = "url('data:image/png;base64," + LOGO_DATA + "')"; wm.style.display = "block"; }
   var b = document.getElementById("userBadge");
-  b.textContent = curUser.isAdmin ? "👑 مدیر سیستم" : curUser.name + " | " + curUser.company;
+  b.textContent = curUser.isAdmin ? "👑 بررسی منابع" : curUser.name + " | " + curUser.personnel;
   if (curUser.isAdmin) b.classList.add("adm");
   await loadSuppliers();
   renderStats();
@@ -309,7 +387,10 @@ async function loadSuppliers() {
   try {
     var res = await sb.from("suppliers").select("*").order("created_at", {ascending:false});
     if (res.error) throw res.error;
-    allSuppliers = res.data || [];
+    allSuppliers = (res.data || []).map(function(s){
+      if (s.id && s.id.startsWith("PGFH-")) s.id = s.id.replace("PGFH-","NOPC-");
+      return s;
+    });
   } catch(e) {
     console.error(e);
     allSuppliers = [];
@@ -318,6 +399,7 @@ async function loadSuppliers() {
 
 function getFiltered() {
   var list = allSuppliers.slice();
+  if (fBlacklist) list = list.filter(function(s){ return s.is_blacklist; });
   if (fSearch) list = list.filter(function(s){ return s.name.indexOf(fSearch) >= 0 || (s.id && s.id.indexOf(fSearch) >= 0); });
   if (fCat) list = list.filter(function(s){ return s.category === fCat; });
   if (fProv) list = list.filter(function(s){ return s.province === fProv; });
@@ -328,23 +410,35 @@ function getFiltered() {
 
 function renderStats() {
   var total = allSuppliers.length;
-  var pend = allSuppliers.filter(function(s){ return s.status === "pending"; }).length;
-  var appr = allSuppliers.filter(function(s){ return s.status === "approved"; }).length;
-  var bl = allSuppliers.filter(function(s){ return s.is_blacklist; }).length;
-    document.getElementById("statsBar").innerHTML =
-    '<div class="sc gold" style="cursor:pointer" onclick="fStatus=\'\';fType=\'\';curPage=1;renderTab(\'list\')">' +
-    '<div class="sn">' + total + '</div><div class="sl">کل تامین‌کنندگان</div></div>' +
-    '<div class="sc" style="cursor:pointer" onclick="fStatus=\'pending\';curPage=1;renderTab(\'list\')">' +
-    '<div class="sn">' + pend + '</div><div class="sl">در انتظار تایید</div></div>' +
-    '<div class="sc green" style="cursor:pointer" onclick="fStatus=\'approved\';curPage=1;renderTab(\'list\')">' +
-    '<div class="sn">' + appr + '</div><div class="sl">تایید شده</div></div>' +
-    '<div class="sc red" style="cursor:pointer" onclick="renderBL()">' +
-    '<div class="sn">' + bl + '</div><div class="sl">لیست سیاه</div></div>';
+  var pend  = allSuppliers.filter(function(s){ return s.status === "pending"  && !s.is_blacklist; }).length;
+  var appr  = allSuppliers.filter(function(s){ return s.status === "approved" && !s.is_blacklist; }).length;
+  var bl    = allSuppliers.filter(function(s){ return s.is_blacklist; }).length;
+  var rej   = allSuppliers.filter(function(s){ return s.status === "rejected" && !s.is_blacklist; }).length;
+  var activeFilter = fBlacklist ? "blacklist" : fStatus;
+  document.getElementById("statsBar").innerHTML =
+    '<div class="sc gold" onclick="filterByStat(\'\')" style="cursor:pointer;' + (!activeFilter ? 'box-shadow:0 0 0 3px #e6a817;' : '') + '"><div class="sn">' + total + '</div><div class="sl">کل تامین‌کنندگان</div></div>' +
+    '<div class="sc" onclick="filterByStat(\'pending\')" style="cursor:pointer;' + (activeFilter==="pending" ? 'box-shadow:0 0 0 3px #3b82f6;background:#dbeafe;' : '') + '"><div class="sn">' + pend + '</div><div class="sl">در انتظار تایید</div></div>' +
+    '<div class="sc green" onclick="filterByStat(\'approved\')" style="cursor:pointer;' + (activeFilter==="approved" ? 'box-shadow:0 0 0 3px #10b981;' : '') + '"><div class="sn">' + appr + '</div><div class="sl">تایید شده</div></div>' +
+    '<div class="sc darkred" onclick="filterByStat(\'rejected\')" style="cursor:pointer;' + (activeFilter==="rejected" ? 'box-shadow:0 0 0 3px #dc2626;' : '') + '"><div class="sn">' + rej + '</div><div class="sl">رد شده</div></div>' +
+    '<div class="sc black" onclick="filterByStat(\'blacklist\')" style="cursor:pointer;' + (activeFilter==="blacklist" ? 'box-shadow:0 0 0 3px #000;' : '') + '"><div class="sn">' + bl + '</div><div class="sl">🚫 لیست سیاه</div></div>';
+}
+
+function filterByStat(type) {
+  if (type === "blacklist") { fStatus = ""; fBlacklist = true; }
+  else if (type === "") { fStatus = ""; fBlacklist = false; }
+  else { fBlacklist = false; fStatus = type; }
+  curPage = 1;
+  renderStats();
+  if (curTab === "list") renderTab("list");
+  else renderTab(curTab);
 }
 
 function renderTabs() {
-  var tabs = [["list","📋 تامین‌کنندگان"],["ai","🤖 مشاور هوشمند"],["report","📊 گزارش"]];
+  var tabs = [["list","📋 تامین‌کنندگان"]];
+  if (curUser.isAdmin) tabs.push(["ai","🤖 مشاور هوشمند"]);
+  if (curUser.isAdmin) tabs.push(["report","📊 گزارش"]);
   if (curUser.isAdmin) tabs.push(["admin","⚙️ مدیریت"]);
+  if (curUser.isAdmin) tabs.push(["excel","📥 ورود اطلاعات اکسل"]);
   document.getElementById("tabsBar").innerHTML = tabs.map(function(t){
     return '<button class="tab' + (curTab === t[0] ? " active" : "") + '" onclick="renderTab(\'' + t[0] + '\')">' + t[1] + '</button>';
   }).join("");
@@ -357,6 +451,7 @@ function renderTab(tab) {
   else if (tab === "ai") renderAI(c);
   else if (tab === "report") renderReport(c);
   else if (tab === "admin") renderAdmin(c);
+  else if (tab === "excel") renderExcel(c);
 }
 
 function star(v) {
@@ -389,16 +484,17 @@ function renderList(c) {
   var provOpts = PROVS.map(function(p){ return '<option value="' + p + '"' + (fProv===p?" selected":"") + '>' + p + '</option>'; }).join("");
 
   var rows = page.map(function(s, i) {
-    var avg = s.avg_score || "—";
-    return '<tr class="' + (s.is_blacklist ? "bl" : "") + '" onclick="openDetail(\'' + s.id + '\')">' +
+    var avg = (s.status === "pending" && !s.is_blacklist) ? "0" : (s.avg_score || "—");
+    var rowBg = (((curPage-1)*PER+i) % 2 === 1) ? 'background:#f5f5f5;' : '';
+    return '<tr class="' + (s.is_blacklist ? "bl" : "") + '" style="' + rowBg + '" onclick="openDetail(\'' + s.id + '\')">' +
       '<td>' + ((curPage-1)*PER+i+1) + '</td>' +
-      '<td style="font-size:11px;color:var(--g5)">' + (s.id||"") + '</td>' +
-      '<td><div class="cn">' + s.name + '</div>' + (s.is_blacklist ? '<div class="blb">🚫 لیست سیاه</div>' : '') + '</td>' +
+      '<td style="font-size:11px;color:var(--g5)">' + (s.id||"").replace(/^PGFH-/,'NOPC-') + '</td>' +
+      '<td><div class="cn hov-name">' + s.name + '</div>' + (s.is_blacklist ? '<div class="blb">🚫 لیست سیاه</div>' : '') + '</td>' +
       '<td>' + typeBadge(s.type) + '</td>' +
       '<td>' + (s.category||"—") + '</td>' +
       '<td>' + (s.province||"—") + '</td>' +
       '<td>' + statusBadge(s.status) + '</td>' +
-      '<td>' + (avg !== "—" ? scoreBadge(avg) : "—") + '</td>' +
+      '<td>' + (avg === "0" ? '<span class="badge pend">0</span>' : (avg !== "—" ? scoreBadge(avg) : "—")) + '</td>' +
       '</tr>';
   }).join("");
 
@@ -413,7 +509,7 @@ function renderList(c) {
     '<select class="fs" onchange="fType=this.value;curPage=1;renderTab(\'list\')"><option value="">همه انواع</option><option value="legal"' + (fType==="legal"?" selected":"") + '>حقوقی</option><option value="real"' + (fType==="real"?" selected":"") + '>حقیقی</option><option value="store"' + (fType==="store"?" selected":"") + '>فروشگاه</option><option value="foreign"' + (fType==="foreign"?" selected":"") + '>خارجی</option></select>' +
     '<select class="fs" onchange="fCat=this.value;curPage=1;renderTab(\'list\')"><option value="">همه دسته‌ها</option>' + catOpts + '</select>' +
     '<select class="fs" onchange="fProv=this.value;curPage=1;renderTab(\'list\')"><option value="">همه استان‌ها</option>' + provOpts + '</select>' +
-    '<select class="fs" onchange="fStatus=this.value;curPage=1;renderTab(\'list\')"><option value="">همه وضعیت‌ها</option><option value="pending"' + (fStatus==="pending"?" selected":"") + '>در انتظار</option><option value="approved"' + (fStatus==="approved"?" selected":"") + '>تایید شده</option><option value="rejected"' + (fStatus==="rejected"?" selected":"") + '>رد شده</option></select>' +
+    '<select class="fs" onchange="fStatus=this.value;fBlacklist=false;curPage=1;renderStats();renderTab(\'list\')"><option value="">همه وضعیت‌ها</option><option value="pending"' + (fStatus==="pending"?" selected":"") + '>در انتظار</option><option value="approved"' + (fStatus==="approved"?" selected":"") + '>تایید شده</option><option value="rejected"' + (fStatus==="rejected"?" selected":"") + '>رد شده</option></select>' +
     '<button class="abtn" onclick="exportCSV()">📥 CSV</button>' +
     (curUser.isAdmin ? '<button class="abtn grn" onclick="refreshData()">🔄 بروزرسانی</button>' : '') +
     '</div>' +
@@ -425,86 +521,330 @@ function renderList(c) {
 async function openDetail(id) {
   var s = allSuppliers.find(function(x){ return x.id === id; });
   if (!s) return;
-
   showModal(s.name, '<div class="loading"><div class="spin"></div> بارگذاری اطلاعات...</div>');
-
   try {
-    var [ratRes, memRes, docRes] = await Promise.all([
-      sb.from("supplier_ratings").select("*").eq("supplier_id", id).order("created_at", {ascending:false}),
-      sb.from("supplier_members").select("*").eq("supplier_id", id),
-      sb.from("supplier_documents").select("*").eq("supplier_id", id)
+    var [ratRes, memRes] = await Promise.all([
+      sb.from("supplier_ratings").select("*").eq("supplier_id", toDbId(id)).order("created_at", {ascending:false}),
+      sb.from("supplier_members").select("*").eq("supplier_id", toDbId(id))
     ]);
-
     var ratings = ratRes.data || [];
     var members = memRes.data || [];
-    var docs = docRes.data || [];
-    var purchaseCount = ratings.length;
+    // جدا کردن نظرات از ارزیابی‌ها
+    var comments = ratings.filter(function(r){ return r.total_score === 0 && r.item_name === "نظر کارمند"; });
+    var evals = ratings.filter(function(r){ return r.total_score > 0 || r.item_name !== "نظر کارمند"; });
+    var purchaseCount = evals.length;
+    var avg = purchaseCount > 0 ? (evals.reduce(function(acc,r){ return acc + (r.total_score||0); }, 0) / purchaseCount).toFixed(2) : null;
 
-    var avg = purchaseCount > 0 ? (ratings.reduce(function(s,r){ return s + (r.total_score||0); }, 0) / purchaseCount).toFixed(2) : null;
+    // بررسی آیا این کارمند قبلاً نظر ثبت کرده
+    var myComment = comments.find(function(r){ return r.rater_personnel === curUser.personnel; });
 
-    var infoHtml =
-      '<div class="dr"><span class="dl">کد</span><span class="dv">' + (s.id||"—") + '</span></div>' +
-      '<div class="dr"><span class="dl">نوع</span><span class="dv">' + typeBadge(s.type) + '</span></div>' +
-      '<div class="dr"><span class="dl">دسته‌بندی</span><span class="dv">' + (s.category||"—") + '</span></div>' +
-      '<div class="dr"><span class="dl">استان</span><span class="dv">' + (s.province||"—") + '</span></div>' +
-      '<div class="dr"><span class="dl">تلفن</span><span class="dv">' + (s.phone||"—") + '</span></div>' +
-      '<div class="dr"><span class="dl">ایمیل</span><span class="dv">' + (s.email||"—") + '</span></div>' +
-      '<div class="dr"><span class="dl">شناسه ملی</span><span class="dv">' + (s.nat_id||"—") + '</span></div>' +
-      '<div class="dr"><span class="dl">وضعیت</span><span class="dv">' + statusBadge(s.status) + '</span></div>';
+    // تابع کمکی ردیف اطلاعات
+    function drow(icon,label,val,ltr){
+      if(!val&&val!==0)return '';
+      return '<div class="dr"><span class="dl">'+icon+' '+label+'</span><span class="dv'+(ltr?' ltr-val':'')+'">'+val+'</span></div>';
+    }
+    function dsec(title,color,content){
+      return '<div style="background:white;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)">'
+        +'<div style="font-size:12px;font-weight:900;color:white;background:'+color+';border-radius:7px;padding:7px 12px;margin-bottom:10px">'+title+'</div>'
+        +content+'</div>';
+    }
 
-    if (avg) infoHtml += '<div class="avg-box"><div class="avg-num">' + avg + '★</div><div style="font-size:12px;color:var(--g5);font-weight:700">میانگین ' + purchaseCount + ' ارزیابی</div></div>';
+    var typeLabel={'legal':'شخص حقوقی','real':'شخص حقیقی','store':'فروشگاه','foreign':'خارجی'}[s.type]||s.type||'—';
 
-    var memHtml = members.length ? members.map(function(m){
-      return '<div class="dr"><span class="dl">' + (m.name||"") + ' ' + (m.lastname||"") + '</span><span class="dv">' + (m.role||"") + ' | ' + (m.national_code||"") + '</span></div>';
-    }).join("") : '<div style="font-size:12px;color:var(--g5);font-weight:700">اعضایی ثبت نشده</div>';
+    // بخش ۱ - اطلاعات اولیه
+    var sec1 = drow('🏢','نام',s.name)
+      + drow('🆔','کد',(s.id||'').replace(/^PGFH-/,'NOPC-'),true)
+      + drow('⚙️','نوع',typeLabel)
+      + drow('📊','وضعیت',statusBadge(s.status)+(s.is_blacklist?' <span class="blb">🚫 لیست سیاه</span>':''))
+      + drow('📅','سال تاسیس',s.founded_year)
+      + drow('🏆','رتبه پیمانکاری',s.rank)
+      + drow('📜','گواهینامه ISO',s.iso)
+      + drow('🏭','دسته فعالیت',s.category)
+      + drow('🗺️','استان',s.province)
+      + (s.avg_score?drow('⭐','امتیاز میانگین',s.avg_score+' از ۵'):'')
+      + (s.created_at?drow('📆','تاریخ ثبت‌نام',new Date(s.created_at).toLocaleDateString('fa-IR')):'');
+    if (avg && s.status !== 'pending') sec1 += '<div class="avg-box"><div class="avg-num">' + avg + '★</div><div style="font-size:12px;color:var(--g5);font-weight:700">میانگین ' + purchaseCount + ' ارزیابی</div></div>';
 
-    var docHtml = docs.length ? docs.map(function(d){
-      return '<div class="dr"><span class="dl">📄 ' + (d.doc_type||"") + '</span><span class="dv">' + (d.verified ? '✅ تایید شده' : '⏳ در انتظار') + ' — <a href="' + (d.file_url||"#") + '" target="_blank" style="color:var(--blue)">مشاهده</a></span></div>';
-    }).join("") : '<div style="font-size:12px;color:var(--g5);font-weight:700">سندی بارگذاری نشده</div>';
+    // بخش ۲ - ارتباطی
+    var sec2 = drow('📱','موبایل',(s.phone||'—')+(curUser.isAdmin?' <button onclick="editField(\''+id+'\',\'phone\')" style="background:none;border:1px solid #d1fae5;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;color:#059669;font-weight:900;margin-right:6px">✏️</button>':''),true)
+      + drow('📧','ایمیل',(s.email||'—')+(curUser.isAdmin?' <button onclick="editField(\''+id+'\',\'email\')" style="background:none;border:1px solid #d1fae5;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;color:#059669;font-weight:900;margin-right:6px">✏️</button>':''))
+      + drow('📮','کد پستی',s.postal_code,true)
+      + drow('🏠','آدرس',s.address);
 
-    var ratHtml = '<div class="ir-box">' +
-      '<div style="font-size:13px;font-weight:900;color:#065f46;margin-bottom:12px">ثبت ارزیابی جدید</div>' +
-      '<div class="ir-grid">' +
-      '<div class="ir-fg"><label>نام کالا *</label><input id="ir_item" placeholder="مثال: شیر فلکه DN200"></div>' +
-      '<div class="ir-fg"><label>شماره ایندنت *</label><input id="ir_indent" placeholder="مثال: IND-2024-001"></div>' +
-      '</div>' +
-      '<div class="ir-scores">' +
-      ['quality:کیفیت','communication:ارتباط','pricing:قیمت','followup:پس‌فروش','delay_score:تحویل'].map(function(kl){
-        var parts = kl.split(":");
-        return '<div class="ir-s"><label>' + parts[1] + '</label><select id="ir_' + parts[0] + '"><option value="5">5★</option><option value="4">4★</option><option value="3" selected>3★</option><option value="2">2★</option><option value="1">1★</option></select></div>';
-      }).join("") +
-      '</div>' +
-      '<button onclick="submitRating(\'' + id + '\')" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:900;cursor:pointer">✓ ثبت ارزیابی</button>' +
-      '</div>';
+    // بخش ۳ - ثبتی
+    var sec3 = drow('🪪','شناسه ملی',s.nat_id,true)
+      + drow('📋','شماره ثبت',s.reg_no,true)
+      + drow('💼','شناسه اقتصادی',s.eco_id,true);
 
-    var histHtml = ratings.length ? ratings.slice(0,8).map(function(r){
+    // بخش ۴ - بانکی
+    var sec4 = drow('🏦','بانک',s.bank_name)
+      + drow('💳','شماره حساب',s.bank_account,true)
+      + drow('🔢','شماره شبا','IR'+(s.sheba||''),true);
+
+    // بخش ۵ - اعضا
+    var sec5 = '';
+    if(members.length){
+      members.forEach(function(m){
+        sec5 += '<div style="background:#f8fafc;border-radius:8px;padding:10px;margin-bottom:6px;border-right:3px solid #1e3a5f">'
+          +'<div style="font-size:12px;font-weight:900;color:#1e3a5f;margin-bottom:4px">👤 '+(m.name||'')+(m.lastname?' '+m.lastname:'')+'</div>'
+          +'<div class="dr" style="border:none;padding:4px 0"><span class="dl">🪪 کد ملی</span><span class="dv ltr-val">'+(m.national_code||'—')+'</span></div>'
+          +'<div style="font-size:11px;color:#6b7280;font-weight:700">🎖️ نقش: '+(m.role||'—')+'</div></div>';
+      });
+    }
+
+    // بخش ۶ - اسناد (فقط بررسی منابع)
+    var sec6 = '';
+    if(curUser.isAdmin){
+      sec6 = '<div id="vsDocs_'+id+'" style="text-align:center;color:#9ca3af;font-size:12px;padding:10px">⏳ در حال بارگذاری اسناد...</div>';
+    }
+
+    // بخش ۷ - حوزه فعالیت
+    var sec7 = '';
+    var acts = s.activities;
+    if(acts){
+      if(typeof acts==='string'){try{acts=JSON.parse(acts);}catch(e){acts=null;}}
+      if(acts&&typeof acts==='object'){
+        Object.keys(acts).forEach(function(k){
+          var subs=acts[k];
+          sec7+='<div style="margin-bottom:6px"><div style="font-size:12px;font-weight:900;color:#1e3a5f;margin-bottom:3px">📌 '+k+'</div>';
+          if(Array.isArray(subs)&&subs.length){
+            sec7+='<div style="display:flex;flex-wrap:wrap;gap:3px">';
+            subs.forEach(function(sub){sec7+='<span style="background:#ede9fe;color:#6d28d9;border-radius:5px;padding:2px 7px;font-size:11px;font-weight:700">'+sub+'</span>';});
+            sec7+='</div>';
+          }
+          sec7+='</div>';
+        });
+      }
+    }
+    if(!sec7&&s.category) sec7=drow('🏭','دسته اصلی',s.category);
+
+    var infoHtml = dsec('📋 اطلاعات اولیه','linear-gradient(135deg,#1e3a5f,#2d5a8e)',sec1)
+      + dsec('📞 اطلاعات ارتباطی','linear-gradient(135deg,#0891b2,#0e7490)',sec2)
+      + dsec('🏛️ اطلاعات ثبتی','linear-gradient(135deg,#7c3aed,#6d28d9)',sec3)
+      + dsec('🏦 اطلاعات بانکی','linear-gradient(135deg,#047857,#065f46)',sec4)
+      + (sec5?dsec('👥 اعضای هیئت مدیره','linear-gradient(135deg,#b45309,#92400e)',sec5):'')
+      + (curUser.isAdmin ? dsec('📁 اسناد بارگذاری شده','linear-gradient(135deg,#6d28d9,#5b21b6)',sec6) : '')
+      + (sec7?dsec('🏭 حوزه‌های فعالیت','linear-gradient(135deg,#be185d,#9d174d)',sec7):'');
+
+    var memHtml = '';
+
+    // کادر نظر کارمند - فقط یک بار مجاز
+    var commBox = '';
+    if (!curUser.isAdmin) {
+      if (myComment) {
+        commBox = '<div class="ir-box" style="background:#f0fdf4;border-color:#bbf7d0">' +
+          '<div style="font-size:13px;font-weight:900;color:#065f46;margin-bottom:6px">✅ نظر شما ثبت شده است</div>' +
+          '<div style="font-size:12px;color:#374151;font-weight:700;background:white;padding:10px;border-radius:8px;border:1px solid #d1fae5">' + (myComment.comment||"") + '</div>' +
+          '<div style="font-size:11px;color:var(--g5);margin-top:6px;font-weight:700">🕐 ' + new Date(myComment.created_at).toLocaleDateString("fa-IR") + ' | 👤 ' + curUser.name + ' | شماره پرسنلی: ' + curUser.personnel + '</div>' +
+          '</div>';
+      } else {
+        commBox = '<div class="ir-box" style="background:#fffbeb;border-color:#fde68a">' +
+          '<div style="font-size:13px;font-weight:900;color:#92400e;margin-bottom:10px">💬 ثبت نظر (یک‌بار)</div>' +
+          '<textarea id="comm_text" placeholder="نظر خود را بنویسید..." rows="3" style="width:100%;padding:9px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;font-weight:700;outline:none;resize:vertical;font-family:Vazirmatn,Tahoma,sans-serif"></textarea>' +
+          '<div style="font-size:11px;color:var(--g5);margin:6px 0;font-weight:700">👤 ' + curUser.name + ' | پرسنلی: ' + curUser.personnel + ' | پتروشیمی نوری</div>' +
+          '<button onclick="submitComment(\'' + id + '\')" style="background:linear-gradient(135deg,#e6a817,#d97706);color:white;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:900;cursor:pointer">✓ ثبت نظر</button>' +
+          '</div>';
+      }
+    }
+
+    // نظرات سایر کارکنان
+    var commHistHtml = comments.length ? '<div class="st">نظرات کارکنان (' + comments.length + ')</div>' +
+      comments.map(function(r){
+        return '<div class="hist-item" style="border-right-color:#e6a817">' +
+          '<div style="font-size:12px;color:#374151;font-weight:700;margin-bottom:4px">' + (r.comment||"") + '</div>' +
+          '<div style="font-size:11px;color:var(--g5)">👤 ' + (r.rater_name||"") + ' | پرسنلی: ' + (r.rater_personnel||"") + ' | ⏰ ' + new Date(r.created_at).toLocaleString("fa-IR") + '</div>' +
+          '</div>';
+      }).join("") : '';
+
+    // جدول سبز مشترک
+    function mkGreenTable(pfx) {
+      var keys = ["quality","communication","pricing","followup","delay_score"];
+      var labs = ["کیفیت","ارتباط","قیمت","پس‌فروش","تحویل"];
+      return '<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><thead><tr>' +
+        '<th style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:8px 6px;font-size:11px;font-weight:900;border:1px solid #059669">معیار</th>' +
+        labs.map(function(l){ return '<th style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:8px 6px;font-size:11px;font-weight:900;border:1px solid #059669">' + l + '</th>'; }).join("") +
+        '</tr></thead><tbody><tr style="background:#f0fdf4">' +
+        '<td style="padding:8px 6px;font-size:11px;font-weight:900;color:#065f46;border:1px solid #d1fae5">امتیاز</td>' +
+        keys.map(function(k){ return '<td style="padding:6px;border:1px solid #d1fae5;text-align:center"><select id="' + pfx + k + '" style="width:54px;padding:4px;border:1.5px solid #86efac;border-radius:6px;font-size:12px;font-weight:700;color:#065f46"><option value="5">5★</option><option value="4">4★</option><option value="3" selected>3★</option><option value="2">2★</option><option value="1">1★</option></select></td>'; }).join("") +
+        '</tr></tbody></table>';
+    }
+
+    // کادر نظر ادمین
+    var adminCommentBox = "";
+    if (curUser.isAdmin) {
+      var myAdminComm = comments.find(function(r){ return r.rater_personnel === "0000" && r.item_name === "نظر کارمند"; });
+      if (myAdminComm) {
+        adminCommentBox = '<div class="ir-box" style="background:#f0fdf4;border-color:#bbf7d0;margin-bottom:10px">' +
+          '<div style="font-size:12px;font-weight:900;color:#065f46;margin-bottom:4px">✅ نظر بررسی منابع ثبت شده</div>' +
+          '<div style="font-size:12px;color:#374151;font-weight:700;background:white;padding:8px;border-radius:8px">' + (myAdminComm.comment||"") + '</div></div>';
+      } else {
+        adminCommentBox = '<div class="ir-box" style="background:#fffbeb;border-color:#fde68a;margin-bottom:10px">' +
+          '<div style="font-size:13px;font-weight:900;color:#92400e;margin-bottom:8px">✍️ ثبت نظر — بررسی منابع</div>' +
+          '<textarea id="admin_comm_text" rows="3" placeholder="نظر بررسی منابع..." style="width:100%;padding:9px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;font-weight:700;outline:none;resize:vertical;font-family:Vazirmatn,Tahoma,sans-serif"></textarea>' +
+          '<button onclick="submitAdminComment(\'' + id + '\')" style="margin-top:8px;background:linear-gradient(135deg,#e6a817,#d97706);color:white;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:900;cursor:pointer">✓ ثبت نظر</button></div>';
+      }
+    }
+
+    // ارزیابی خرید ادمین با جدول سبز
+    var ratHtml = "";
+    if (curUser.isAdmin) {
+      ratHtml = '<div class="ir-box">' +
+        '<div style="font-size:13px;font-weight:900;color:#065f46;margin-bottom:12px">📋 ثبت ارزیابی خرید جدید</div>' +
+        '<div class="ir-grid"><div class="ir-fg"><label>نام کالا *</label><input id="ir_item" placeholder="مثال: شیر فلکه DN200"></div>' +
+        '<div class="ir-fg"><label>شماره ایندنت *</label><input id="ir_indent" placeholder="مثال: IND-2024-001"></div></div>' +
+        mkGreenTable("ir_") +
+        '<button onclick="submitRating(\'' + id + '\')" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:900;cursor:pointer">✓ ثبت ارزیابی</button></div>';
+    }
+
+    // ارزیابی خرید کارمندان با جدول سبز
+    var empRatingBox = "";
+    if (!curUser.isAdmin) {
+      empRatingBox = '<div class="ir-box">' +
+        '<div style="font-size:13px;font-weight:900;color:#065f46;margin-bottom:10px">📋 ارزیابی خرید</div>' +
+        '<div class="ir-grid" style="margin-bottom:10px">' +
+        '<div class="ir-fg"><label>نام کالا</label><input id="emp_ir_item" placeholder="نام کالا"></div>' +
+        '<div class="ir-fg"><label>شماره ایندنت</label><input id="emp_ir_indent" placeholder="شماره ایندنت"></div></div>' +
+        mkGreenTable("emp_") +
+        '<button onclick="submitEmpRating(\'' + id + '\')" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:900;cursor:pointer">✓ ثبت ارزیابی خرید</button></div>';
+    }
+    var histHtml = evals.length ? evals.slice(0,8).map(function(r){
       return '<div class="hist-item">' +
         '<div style="display:flex;justify-content:space-between;margin-bottom:4px">' +
         '<div><span style="font-size:13px;font-weight:900">📦 ' + (r.item_name||"") + '</span> <span style="font-size:11px;color:var(--g5)">ایندنت: ' + (r.indent_no||"") + '</span></div>' +
         '<span style="font-weight:900;color:var(--gold-d)">' + (r.total_score||"") + '★</span></div>' +
-        '<div style="font-size:11px;color:var(--g5)">👤 ' + (r.rater_name||"") + ' | 🏭 ' + (r.rater_company||"") + ' | ⏰ ' + new Date(r.created_at).toLocaleDateString("fa-IR") + '</div>' +
+        '<div style="font-size:11px;color:var(--g5)">👤 ' + (r.rater_name||"") + ' | 🏭 پتروشیمی نوری | ⏰ ' + new Date(r.created_at).toLocaleDateString("fa-IR") + '</div>' +
         '</div>';
     }).join("") : '<div style="font-size:12px;color:var(--g5);font-weight:700">ارزیابی‌ای ثبت نشده</div>';
 
-    var adminBtns = curUser.isAdmin ?
-      '<div class="st">عملیات مدیریتی</div>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-      '<button onclick="changeStatus(\'' + id + '\',\'approved\')" style="background:#10b981;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">✅ تایید</button>' +
-      '<button onclick="changeStatus(\'' + id + '\',\'rejected\')" style="background:#ef4444;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">❌ رد</button>' +
-      '<button onclick="toggleBL(\'' + id + '\')" style="background:' + (s.is_blacklist?"#10b981":"#6b7280") + ';color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">' + (s.is_blacklist?"✅ خروج از لیست سیاه":"🚫 لیست سیاه") + '</button>' +
-      '</div>' : "";
+    var adminBtns = "";
+    if (curUser.isAdmin) {
+      var pendBtns = s.status === "pending" ?
+        '<button onclick="changeStatus(\'' + id + '\',\'approved\')" style="background:#10b981;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">✅ تایید</button>' +
+        '<button onclick="changeStatus(\'' + id + '\',\'rejected\')" style="background:#ef4444;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">❌ رد</button>' : "";
+      var blBtn = s.status !== "rejected" ?
+        '<button onclick="toggleBL(\'' + id + '\')" style="background:' + (s.is_blacklist?"#10b981":"#6b7280") + ';color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:900;cursor:pointer">' + (s.is_blacklist?"✅ خروج از لیست سیاه":"🚫 لیست سیاه") + '</button>' : "";
+      adminBtns = '<div class="st">عملیات مدیریتی</div><div style="display:flex;gap:8px;flex-wrap:wrap">' + pendBtns + blBtn + '</div>';
+    }
 
     document.getElementById("modalBody").innerHTML =
-      '<div class="st">اطلاعات اصلی</div>' + infoHtml +
-      (members.length ? '<div class="st">اعضای هیئت مدیره</div>' + memHtml : '') +
-      (docs.length ? '<div class="st">مدارک</div>' + docHtml : '') +
-      '<div class="st">ارزیابی خرید (نام کالا + ایندنت)</div>' + ratHtml +
-      '<div class="st">تاریخچه ارزیابی‌ها (' + purchaseCount + ' خرید)</div>' + histHtml +
+      infoHtml +
+      commBox +
+      commHistHtml +
+      (curUser.isAdmin ? '<div class="st">💬 نظر بررسی منابع</div>' + adminCommentBox : '') +
+      (curUser.isAdmin ? '<div class="st">ارزیابی خرید</div>' + ratHtml : '') +
+      (!curUser.isAdmin ? '<div class="st">📋 ارزیابی خرید</div>' + empRatingBox : '') +
+      (evals.length && s.status !== 'pending' ? '<div class="st">تاریخچه ارزیابی‌ها (' + purchaseCount + ')</div>' + histHtml : '') +
       adminBtns;
+
+    // بارگذاری اسناد واقعی برای بررسی منابع
+    if(curUser.isAdmin) loadVsDocs(id);
 
   } catch(e) {
     document.getElementById("modalBody").innerHTML = '<div style="color:red;font-weight:700">خطا در بارگذاری: ' + e.message + '</div>';
   }
+}
+
+async function editField(suppId, field) {
+  var s = allSuppliers.find(function(x){ return x.id === suppId; });
+  var cur = s ? (field === 'phone' ? s.phone : s.email) : "";
+  var label = field === 'phone' ? '📱 شماره موبایل' : '📧 ایمیل';
+  var newVal = prompt(label + ' جدید:', cur || "");
+  if (newVal === null) return;
+  newVal = newVal.trim();
+  if (!newVal) { alert("مقدار نمی‌تواند خالی باشد"); return; }
+  try {
+    var upd = {};
+    upd[field] = newVal;
+    await sb.from("suppliers").update(upd).eq("id", toDbId(suppId));
+    var idx = allSuppliers.findIndex(function(x){ return x.id === suppId; });
+    if (idx >= 0) allSuppliers[idx][field] = newVal;
+    alert("✅ " + label + " با موفقیت بروزرسانی شد");
+    openDetail(suppId);
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+async function loadVsDocs(suppId){
+  if(!sb || !curUser.isAdmin) return;
+  try{
+    var res = await sb.from("supplier_docs").select("*").eq("supplier_id", suppId);
+    var el = document.getElementById("vsDocs_"+suppId);
+    if(!el) return;
+    if(!res.data || res.data.length===0){
+      el.innerHTML = '<div style="text-align:center;color:#9ca3af;font-size:12px;padding:10px">هنوز سندی آپلود نشده</div>';
+      return;
+    }
+    var html = '';
+    res.data.forEach(function(doc){
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6">'
+        +'<div style="width:30px;height:30px;background:linear-gradient(135deg,#ede9fe,#ddd6fe);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">📄</div>'
+        +'<div style="flex:1"><div style="font-size:12px;font-weight:900;color:#374151">'+doc.doc_type+'</div>'
+        +'<div style="font-size:11px;color:#6b7280;font-weight:700;margin-top:1px">'+doc.file_name+'</div></div>'
+        +'<a href="'+doc.file_url+'" target="_blank" style="background:#1e3a5f;color:white;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:900;cursor:pointer;text-decoration:none">👁️ مشاهده</a>'
+        +'</div>';
+    });
+    el.innerHTML = html;
+  } catch(e){ console.log("vs docs:", e); }
+}
+
+async function submitComment(suppId) {
+  var txt = document.getElementById("comm_text") ? document.getElementById("comm_text").value.trim() : "";
+  if (!txt) { alert("متن نظر را وارد کنید"); return; }
+  var now = new Date();
+  var timeStr = now.toLocaleDateString("fa-IR") + " " + now.toLocaleTimeString("fa-IR");
+  try {
+    await sb.from("supplier_ratings").insert({
+      supplier_id: toDbId(suppId),
+      item_name: "نظر کارمند",
+      indent_no: "---",
+      rater_name: curUser.name,
+      rater_company: "پتروشیمی نوری",
+      rater_personnel: curUser.personnel,
+      quality: 0, communication: 0, pricing: 0, followup: 0, delay_score: 0,
+      total_score: 0,
+      comment: txt
+    });
+    alert("✅ نظر شما با موفقیت ثبت شد.\n👤 " + curUser.name + " | شماره پرسنلی: " + curUser.personnel + "\n🕐 " + timeStr);
+    closeModal();
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+async function submitAdminComment(suppId) {
+  var txt = document.getElementById("admin_comm_text") ? document.getElementById("admin_comm_text").value.trim() : "";
+  if (!txt) { alert("متن نظر را وارد کنید"); return; }
+  try {
+    var res = await sb.from("supplier_ratings").insert({
+      supplier_id: toDbId(suppId), item_name:"نظر کارمند", indent_no:"---",
+      rater_name:"بررسی منابع", rater_company:"پتروشیمی نوری", rater_personnel:"0000",
+      quality:0, communication:0, pricing:0, followup:0, delay_score:0, total_score:0, comment:txt
+    });
+    if (res.error) throw res.error;
+    alert("✅ نظر بررسی منابع ثبت شد");
+    closeModal();
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+async function submitEmpRating(suppId) {
+  var item = document.getElementById("emp_ir_item") ? document.getElementById("emp_ir_item").value.trim() : "";
+  var indent = document.getElementById("emp_ir_indent") ? document.getElementById("emp_ir_indent").value.trim() : "";
+  if (!item) { alert("نام کالا را وارد کنید"); return; }
+  if (!indent) { alert("شماره ایندنت را وارد کنید"); return; }
+  var q=parseInt(document.getElementById("emp_quality").value);
+  var c2=parseInt(document.getElementById("emp_communication").value);
+  var p=parseInt(document.getElementById("emp_pricing").value);
+  var f=parseInt(document.getElementById("emp_followup").value);
+  var d=parseInt(document.getElementById("emp_delay_score").value);
+  var total = +((q+c2+p+f+d)/5).toFixed(2);
+  try {
+    var res = await sb.from("supplier_ratings").insert({
+      supplier_id:toDbId(suppId), item_name:item, indent_no:indent,
+      rater_name:curUser.name, rater_company:"پتروشیمی نوری", rater_personnel:curUser.personnel,
+      quality:q, communication:c2, pricing:p, followup:f, delay_score:d, total_score:total
+    });
+    if (res.error) throw res.error;
+    alert("✅ ارزیابی خرید ثبت شد!");
+    closeModal();
+    await loadSuppliers(); renderStats(); renderTab("list");
+  } catch(e) { alert("خطا: " + e.message); }
 }
 
 async function submitRating(suppId) {
@@ -513,57 +853,88 @@ async function submitRating(suppId) {
   if (!item) { alert("نام کالا را وارد کنید"); return; }
   if (!indent) { alert("شماره ایندنت را وارد کنید"); return; }
   var q = parseInt(document.getElementById("ir_quality").value);
-  var c = parseInt(document.getElementById("ir_communication").value);
+  var c2 = parseInt(document.getElementById("ir_communication").value);
   var p = parseInt(document.getElementById("ir_pricing").value);
   var f = parseInt(document.getElementById("ir_followup").value);
   var d = parseInt(document.getElementById("ir_delay_score").value);
-  var total = +((q+c+p+f+d)/5).toFixed(2);
+  var total = +((q+c2+p+f+d)/5).toFixed(2);
   try {
+    var dbId = toDbId(suppId);
     var res = await sb.from("supplier_ratings").insert({
-      supplier_id: suppId,
-      item_name: item,
-      indent_no: indent,
-      rater_name: curUser.name,
-      rater_company: curUser.company,
-      quality: q,
-      communication: c,
-      pricing: p,
-      followup: f,
-      delay_score: d,
-      total_score: total
+      supplier_id: dbId, item_name: item, indent_no: indent,
+      rater_name: curUser.name, rater_company: "پتروشیمی نوری",
+      rater_personnel: curUser.personnel,
+      quality: q, communication: c2, pricing: p, followup: f, delay_score: d, total_score: total
     });
     if (res.error) throw res.error;
     alert("✅ ارزیابی با موفقیت ثبت شد!");
     closeModal();
-    await loadSuppliers();
-    renderStats();
-    renderTab("list");
+    await loadSuppliers(); renderStats(); renderTab("list");
   } catch(e) { alert("خطا: " + e.message); }
 }
 
-async async function changeStatus(id, status) {
+async function changeStatus(id, status) {
+  if (status === "rejected") { showRejectModal(id); return; }
   try {
-    var res = await sb.from("suppliers").update({status:status}).eq("id",id);
-    if(res.error) throw res.error;
-    var i = allSuppliers.findIndex(function(s){return s.id===id;});
-    if(i>=0) allSuppliers[i].status = status;
-    closeModal(); renderStats(); renderTab(curTab);
-    var t=document.createElement("div");
-    t.textContent=status==="approved"?"✅ تایید شد":"❌ رد شد";
-    t.style.cssText="position:fixed;top:80px;right:50%;transform:translateX(50%);background:#1f2937;color:white;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:900;z-index:999";
-    document.body.appendChild(t);setTimeout(function(){t.remove();},2500);
-  } catch(e){alert("خطا: "+e.message);}
+    await sb.from("suppliers").update({status:status}).eq("id",toDbId(id));
+    var idx = allSuppliers.findIndex(function(x){return x.id===id;});
+    if (idx>=0) allSuppliers[idx].status = status;
+    alert("✅ شرکت با موفقیت تایید شد");
+    closeModal();
+    renderStats(); renderTab(curTab);
+  } catch(e) { alert("خطا: " + e.message); }
+}
+
+function showRejectModal(suppId) {
+  var s = allSuppliers.find(function(x){ return x.id === suppId; });
+  var phone = s ? (s.phone || "") : "";
+  var html =
+    '<div style="background:#fef2f2;border:2px solid #fca5a5;border-radius:12px;padding:16px">' +
+    '<div style="font-size:13px;font-weight:900;color:#991b1b;margin-bottom:12px">❌ رد درخواست: ' + (s ? s.name : "") + '</div>' +
+    '<div class="fg" style="margin-bottom:10px"><label style="font-size:12px;font-weight:900;color:#374151;display:block;margin-bottom:5px">📱 شماره موبایل</label>' +
+    '<input id="rej_phone" value="' + phone + '" placeholder="09123456789" style="width:100%;padding:9px 11px;border:1.5px solid #fca5a5;border-radius:8px;font-size:13px;font-weight:700;outline:none;font-family:Vazirmatn,Tahoma,sans-serif"></div>' +
+    '<div class="fg" style="margin-bottom:10px"><label style="font-size:12px;font-weight:900;color:#374151;display:block;margin-bottom:5px">📝 دلیل رد *</label>' +
+    '<textarea id="rej_reason" placeholder="دلیل رد را بنویسید..." rows="3" style="width:100%;padding:9px;border:1.5px solid #fca5a5;border-radius:8px;font-size:13px;font-weight:700;outline:none;resize:vertical;font-family:Vazirmatn,Tahoma,sans-serif"></textarea></div>' +
+    '<div style="display:flex;gap:8px">' +
+    '<button onclick="confirmReject(\'' + suppId + '\')" style="flex:1;background:#ef4444;color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:900;cursor:pointer">❌ تایید رد + ارسال پیام</button>' +
+    '<button onclick="closeModal()" style="background:#6b7280;color:white;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:900;cursor:pointer">انصراف</button>' +
+    '</div></div>';
+  showModal("رد درخواست", html);
+}
+
+async function confirmReject(suppId) {
+  var reason = document.getElementById("rej_reason") ? document.getElementById("rej_reason").value.trim() : "";
+  var phone = document.getElementById("rej_phone") ? document.getElementById("rej_phone").value.trim() : "";
+  if (!reason) { alert("⚠️ لطفاً دلیل رد را وارد کنید"); return; }
+  try {
+    await sb.from("suppliers").update({status:"rejected"}).eq("id", toDbId(suppId));
+    try {
+      await sb.from("supplier_ratings").insert({
+        supplier_id: toDbId(suppId), item_name:"دلیل رد", indent_no:"REJECT",
+        rater_name:curUser.name, rater_company:"پتروشیمی نوری", rater_personnel:curUser.personnel,
+        quality:0, communication:0, pricing:0, followup:0, delay_score:0, total_score:0, comment:reason
+      });
+    } catch(e2){}
+    var idx = allSuppliers.findIndex(function(x){return x.id===suppId;});
+    if (idx>=0) { allSuppliers[idx].status = "rejected"; }
+    if (phone) alert("✅ رد شد.\n📱 پیام به " + phone + " ارسال شد.\nدلیل: " + reason);
+    else alert("✅ وضعیت رد شد.");
+    closeModal();
+    renderStats(); renderTab(curTab);
+  } catch(e) { alert("خطا: " + e.message); }
 }
 
 async function toggleBL(id) {
   var s = allSuppliers.find(function(x){ return x.id===id; });
   if (!s) return;
+  var newBL = !s.is_blacklist;
+  var newStatus = newBL ? "approved" : "approved";
   try {
-    await sb.from("suppliers").update({is_blacklist:!s.is_blacklist}).eq("id",id);
+    await sb.from("suppliers").update({is_blacklist:newBL, status: newStatus}).eq("id",toDbId(id));
+    var idx = allSuppliers.findIndex(function(x){return x.id===id;});
+    if (idx>=0) { allSuppliers[idx].is_blacklist = newBL; allSuppliers[idx].status = newStatus; }
     closeModal();
-    await loadSuppliers();
-    renderStats();
-    renderTab("list");
+    renderStats(); renderTab(curTab);
   } catch(e) { alert("خطا: " + e.message); }
 }
 
@@ -576,7 +947,7 @@ async function refreshData() {
 function exportCSV() {
   var f = getFiltered();
   var rows = [["کد","نام","نوع","دسته","استان","وضعیت","امتیاز"]];
-  f.forEach(function(s){ rows.push([s.id,s.name,s.type,s.category,s.province,s.status,s.avg_score||"—"]); });
+  f.forEach(function(s){ rows.push([(s.id||'').replace(/^PGFH-/,'NOPC-'),s.name,s.type,s.category,s.province,s.status,s.avg_score||"—"]); });
   var csv = "\uFEFF" + rows.map(function(r){ return r.map(function(v){ return '"'+(v||"")+'"'; }).join(","); }).join("\n");
   var a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
@@ -584,7 +955,9 @@ function exportCSV() {
 }
 
 function renderAI(c) {
-  c.innerHTML = '<div class="ai-box"><h3 style="font-size:16px;font-weight:900;color:var(--g8);margin-bottom:6px">🤖 مشاور هوشمند تامین‌کنندگان</h3><p style="font-size:13px;color:var(--g5);font-weight:700;margin-bottom:16px">هر سوالی درباره تامین‌کنندگان بپرسید.</p><div class="ai-exs"><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'بهترین تامین‌کنندگان تایید شده\'">بهترین تایید شده‌ها</button><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'شرکت‌های در انتظار تایید\'">در انتظار تایید</button><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'تحلیل وضعیت کلی\'">تحلیل کلی</button></div><textarea id="aiIn" class="ai-ta" placeholder="سوال خود را بنویسید..."></textarea><br><button class="abtn" style="margin-top:10px" onclick="sendAI()">ارسال ➤</button><div id="aiOut" class="ai-out"></div></div>';
+  c.innerHTML = '<div class="ai-box">' +
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><img src="data:image/png;base64,' + LOGO_DATA + '" style="width:40px;height:40px;object-fit:contain"><div><h3 style="font-size:16px;font-weight:900;color:var(--g8)">🤖 مشاور هوشمند</h3><p style="font-size:12px;color:var(--g5);font-weight:700">پتروشیمی نوری — فقط برای بررسی منابع</p></div></div>' +
+    '<div class="ai-exs"><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'بهترین تامین‌کنندگان تایید شده\'">بهترین تایید شده‌ها</button><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'شرکت‌های در انتظار تایید\'">در انتظار تایید</button><button class="ai-ex" onclick="document.getElementById(\'aiIn\').value=\'تحلیل وضعیت کلی\'">تحلیل کلی</button></div><textarea id="aiIn" class="ai-ta" placeholder="سوال خود را بنویسید..."></textarea><br><button class="abtn" style="margin-top:10px" onclick="sendAI()">ارسال ➤</button><div id="aiOut" class="ai-out"></div></div>';
 }
 
 async function sendAI() {
@@ -593,84 +966,133 @@ async function sendAI() {
   var out = document.getElementById("aiOut");
   out.style.display = "block";
   out.innerHTML = '<div class="spin"></div> در حال پردازش...';
-  var summary = "تعداد کل: " + allSuppliers.length + " | تایید شده: " + allSuppliers.filter(function(s){return s.status==="approved";}).length + " | در انتظار: " + allSuppliers.filter(function(s){return s.status==="pending";}).length;
+  var total = allSuppliers.length;
+  var appr = allSuppliers.filter(function(s){return s.status==="approved"&&!s.is_blacklist;}).length;
+  var pend = allSuppliers.filter(function(s){return s.status==="pending"&&!s.is_blacklist;}).length;
+  var bl = allSuppliers.filter(function(s){return s.is_blacklist;}).length;
+  var summary = "کل: " + total + " | تایید: " + appr + " | انتظار: " + pend + " | لیست سیاه: " + bl;
   try {
-    var res = await fetch("https://api.avalai.ir/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer aa-nsuAawlfncDiyaDutoQcTeyxzLIeMuoE0K7tdVkR480HEmhN"},body:JSON.stringify({model:"gpt-4o-mini",max_tokens:600,messages:[{role:"user",content:"شما مشاور هوشمند سامانه تامین‌کنندگان هلدینگ خلیج فارس هستید. آمار سیستم: "+summary+". لطفاً به سوال زیر به زبان فارسی پاسخ کوتاه و مفید بدهید: "+q}]})});
+    var res = await fetch("https://api.avalai.ir/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer " + API_KEY},body:JSON.stringify({model:"gpt-4o-mini",max_tokens:600,messages:[{role:"user",content:"مشاور هوشمند سامانه تامین‌کنندگان پتروشیمی نوری هستید. آمار: "+summary+". سوال: "+q}]})});
     var data = await res.json();
-    if(data.error) { out.innerHTML = "خطا: " + JSON.stringify(data.error); return; }
-    out.innerHTML = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "پاسخی دریافت نشد: " + JSON.stringify(data).slice(0,200);
+    if(data.error){out.innerHTML="خطا: "+JSON.stringify(data.error);return;}
+    out.innerHTML = data.choices&&data.choices[0]&&data.choices[0].message ? data.choices[0].message.content : "پاسخی دریافت نشد";
   } catch(e) { out.innerHTML = "خطا: " + e.message; }
 }
 
 function renderReport(c) {
   var byType = {legal:0,real:0,store:0,foreign:0};
-  var byStatus = {pending:0,approved:0,rejected:0};
+  var byStatus = {pending:0,approved:0,rejected:0,blacklist:0};
+  var byCat = {};
+  CATS.forEach(function(cat){ byCat[cat]=0; });
   allSuppliers.forEach(function(s){
     if(byType[s.type]!==undefined) byType[s.type]++;
-    if(byStatus[s.status]!==undefined) byStatus[s.status]++;
+    if(s.is_blacklist) { byStatus.blacklist++; }
+    else if(byStatus[s.status]!==undefined) byStatus[s.status]++;
+    if(s.category && byCat[s.category]!==undefined) byCat[s.category]++;
   });
-  c.innerHTML = '<div class="rg">' +
+  var logoBar = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:linear-gradient(135deg,var(--navy),var(--navy-d));padding:12px 16px;border-radius:12px"><img src="data:image/png;base64,' + LOGO_DATA + '" style="width:40px;height:40px;object-fit:contain"><div><div style="color:white;font-size:14px;font-weight:900">گزارش تامین‌کنندگان</div><div style="color:rgba(255,255,255,.7);font-size:11px">پتروشیمی نوری</div></div></div>';
+  c.innerHTML = logoBar + '<div class="rg">' +
     '<div class="rc2"><h4>📊 بر اساس نوع</h4>' +
     Object.keys(byType).map(function(k){ var m={legal:"حقوقی",real:"حقیقی",store:"فروشگاه",foreign:"خارجی"}; return '<div class="rs"><span>' + m[k] + '</span><span style="font-weight:900">' + byType[k] + '</span></div>'; }).join("") +
     '</div>' +
     '<div class="rc2"><h4>📈 بر اساس وضعیت</h4>' +
-    Object.keys(byStatus).map(function(k){ var m={pending:"در انتظار",approved:"تایید شده",rejected:"رد شده"}; return '<div class="rs"><span>' + m[k] + '</span><span style="font-weight:900">' + byStatus[k] + '</span></div>'; }).join("") +
+    '<div class="rs"><span>در انتظار</span><span style="font-weight:900">' + byStatus.pending + '</span></div>' +
+    '<div class="rs"><span>تایید شده</span><span style="font-weight:900">' + byStatus.approved + '</span></div>' +
+    '<div class="rs"><span>رد شده</span><span style="font-weight:900">' + byStatus.rejected + '</span></div>' +
+    '<div class="rs"><span>لیست سیاه</span><span style="font-weight:900">' + byStatus.blacklist + '</span></div>' +
+    '</div>' +
+    '<div class="rc2"><h4>🏭 تفکیک تخصص‌ها</h4>' +
+    CATS.map(function(cat){ return '<div class="rs"><span style="font-size:12px">' + cat + '</span><span style="font-weight:900">' + (byCat[cat]||0) + '</span></div>'; }).join("") +
     '</div>' +
     '</div>';
 }
 
 function renderAdmin(c) {
-  var pend = allSuppliers.filter(function(s){ return s.status==="pending"; });
+  var pend = allSuppliers.filter(function(s){ return s.status==="pending" && !s.is_blacklist; });
   c.innerHTML = '<div style="background:white;border-radius:16px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.07)"><h3 style="font-size:15px;font-weight:900;margin-bottom:16px">⏳ ثبت‌نام‌های در انتظار تایید (' + pend.length + ')</h3>' +
     (pend.length ? '<div class="tw"><table><thead><tr><th>نام</th><th>نوع</th><th>تاریخ</th><th>عملیات</th></tr></thead><tbody>' +
-    pend.map(function(s){ return '<tr><td class="cn">' + s.name + '</td><td>' + typeBadge(s.type) + '</td><td style="font-size:11px">' + new Date(s.created_at).toLocaleDateString("fa-IR") + '</td><td><button onclick="changeStatus(\'' + s.id + '\',\'approved\')" style="background:#10b981;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer;margin-left:4px">✅ تایید</button><button onclick="changeStatus(\'' + s.id + '\',\'rejected\')" style="background:#ef4444;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer">❌ رد</button></td></tr>'; }).join("") +
+    pend.map(function(s){ return '<tr>' +
+      '<td class="cn" onclick="openDetail(\'' + s.id + '\')" style="cursor:pointer">' + s.name + '</td>' +
+      '<td>' + typeBadge(s.type) + '</td>' +
+      '<td style="font-size:11px">' + new Date(s.created_at).toLocaleDateString("fa-IR") + '</td>' +
+      '<td>' +
+        '<button onclick="openDetail(\'' + s.id + '\')" style="background:#3b82f6;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer;margin-left:4px">🔍 اطلاعات</button>' +
+        '<button onclick="changeStatus(\'' + s.id + '\',\'approved\')" style="background:#10b981;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer;margin-left:4px">✅ تایید</button>' +
+        '<button onclick="changeStatus(\'' + s.id + '\',\'rejected\')" style="background:#ef4444;color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:900;cursor:pointer">❌ رد</button>' +
+      '</td></tr>'; }).join("") +
     '</tbody></table></div>' : '<div style="text-align:center;color:var(--g5);font-weight:700;padding:20px">موردی در انتظار تایید نیست ✅</div>') +
     '</div>';
 }
 
-function renderBL() {
-  curTab = "list"; renderTabs();
-  var bls = allSuppliers.filter(function(s){ return s.is_blacklist; });
-  var rows = bls.map(function(s,i){
-    return '<tr class="bl" onclick="openDetail(\'' + s.id + '\')">' +
-      '<td>'+(i+1)+'</td><td style="font-size:11px;color:var(--g5)">'+(s.id||"")+'</td>' +
-      '<td><div class="cn">'+s.name+'</div><div class="blb">🚫 لیست سیاه</div></td>' +
-      '<td>'+typeBadge(s.type)+'</td><td>'+(s.category||"—")+'</td>' +
-      '<td>'+(s.province||"—")+'</td><td>'+statusBadge(s.status)+'</td>' +
-      '<td>'+(s.avg_score?scoreBadge(s.avg_score):"—")+'</td></tr>';
-  }).join("");
-  document.getElementById("mainContent").innerHTML =
-    '<div class="rc" style="color:var(--red);font-weight:900">🚫 لیست سیاه — '+bls.length+' شرکت</div>' +
-    '<div class="tw"><table><thead><tr><th>#</th><th>کد</th><th>نام</th><th>نوع</th><th>دسته</th><th>استان</th><th>وضعیت</th><th>امتیاز</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+function renderExcel(c) {
+  c.innerHTML = '<div class="excel-box"><h3 style="font-size:16px;font-weight:900;margin-bottom:6px;color:var(--g8)">📥 ورود اطلاعات از طریق اکسل</h3>' +
+    '<p style="font-size:13px;color:var(--g5);font-weight:700;margin-bottom:20px">فایل اکسل تامین‌کنندگان را بارگذاری کنید. امتیاز صفر ثبت خواهد شد و بعداً قابل ویرایش است.</p>' +
+    '<div class="drop-area" onclick="document.getElementById(\'xlsFile\').click()" id="dropArea">' +
+    '<div style="font-size:48px;margin-bottom:12px">📊</div>' +
+    '<div style="font-size:15px;font-weight:900;color:#065f46;margin-bottom:6px">کلیک کنید یا فایل را اینجا بکشید</div>' +
+    '<div style="font-size:12px;color:var(--g5)">فرمت‌های مجاز: .xlsx, .xls, .csv</div>' +
+    '<input type="file" id="xlsFile" style="display:none" accept=".xlsx,.xls,.csv" onchange="handleExcelFile(this)">' +
+    '</div>' +
+    '<div id="xlsPreview" style="margin-top:20px"></div>' +
+    '<div style="margin-top:20px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:14px">' +
+    '<div style="font-size:13px;font-weight:900;color:#92400e;margin-bottom:8px">📋 ساختار فایل اکسل</div>' +
+    '<div style="font-size:12px;color:#374151;line-height:1.9;font-weight:700">ستون‌های مورد نیاز:<br>' +
+    '<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:11px">name</code> نام شرکت | ' +
+    '<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:11px">type</code> نوع (legal/real/store/foreign) | ' +
+    '<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:11px">category</code> دسته | ' +
+    '<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:11px">province</code> استان | ' +
+    '<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:11px">phone</code> تلفن | ' +
+    '<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:11px">email</code> ایمیل' +
+    '</div></div></div>';
 }
 
-function showRejectModal(id) {
-  var s = allSuppliers.find(function(x){return x.id===id;});
-  if(!s) return;
-  showModal("❌ رد ثبت‌نام: " + s.name,
-    '<div style="margin-bottom:12px"><label style="font-size:12px;font-weight:900;display:block;margin-bottom:5px">شماره موبایل تامین‌کننده</label>' +
-    '<input id="rPhone" value="'+(s.phone||"")+'" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:14px;font-weight:700;outline:none;text-align:center"></div>' +
-    '<div style="margin-bottom:14px"><label style="font-size:12px;font-weight:900;display:block;margin-bottom:5px">دلیل رد</label>' +
-    '<textarea id="rMsg" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:13px;font-weight:700;outline:none;min-height:110px;resize:vertical">با سلام،
-متاسفانه درخواست ثبت‌نام شما رد شد.
+async function handleExcelFile(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var prev = document.getElementById("xlsPreview");
+  prev.innerHTML = '<div class="loading"><div class="spin"></div> در حال پردازش...</div>';
 
-دلیل: 
-
-برای اطلاعات بیشتر با واحد تدارکات تماس بگیرید.</textarea></div>' +
-    '<div style="display:flex;gap:8px">' +
-    '<button onclick="doReject(\''+id+'\''+')" style="flex:2;background:#ef4444;color:white;border:none;border-radius:9px;padding:12px;font-size:13px;font-weight:900;cursor:pointer">❌ رد + ارسال پیام</button>' +
-    '<button onclick="changeStatus(\''+id+'\',\'rejected\')" style="flex:1;background:#6b7280;color:white;border:none;border-radius:9px;padding:12px;font-size:12px;font-weight:900;cursor:pointer">رد بدون پیام</button>' +
-    '</div>'
-  );
+  var reader = new FileReader();
+  reader.onload = async function(e) {
+    var text = e.target.result;
+    var lines = text.split("\n").filter(function(l){ return l.trim(); });
+    if (lines.length < 2) { prev.innerHTML = '<div style="color:red;font-weight:700">فایل خالی است</div>'; return; }
+    var headers = lines[0].split(",").map(function(h){ return h.trim().replace(/"/g,""); });
+    var rows = [];
+    for (var i = 1; i < Math.min(lines.length, 51); i++) {
+      var vals = lines[i].split(",").map(function(v){ return v.trim().replace(/"/g,""); });
+      var row = {};
+      headers.forEach(function(h,j){ row[h] = vals[j]||""; });
+      rows.push(row);
+    }
+    prev.innerHTML = '<div style="font-size:13px;font-weight:900;color:#065f46;margin-bottom:10px">✅ ' + rows.length + ' ردیف شناسایی شد</div>' +
+      '<div class="tw"><table><thead><tr><th>نام</th><th>نوع</th><th>دسته</th><th>استان</th><th>تلفن</th></tr></thead><tbody>' +
+      rows.slice(0,5).map(function(r){ return '<tr><td>' + (r.name||"—") + '</td><td>' + (r.type||"—") + '</td><td>' + (r.category||"—") + '</td><td>' + (r.province||"—") + '</td><td>' + (r.phone||"—") + '</td></tr>'; }).join("") +
+      '</tbody></table></div>' +
+      (rows.length > 5 ? '<div style="font-size:12px;color:var(--g5);margin-top:6px;font-weight:700">و ' + (rows.length-5) + ' ردیف دیگر...</div>' : '') +
+      '<button onclick="importExcelRows(' + JSON.stringify(rows).replace(/</g,"\\u003c") + ')" style="margin-top:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:900;cursor:pointer">📥 ورود به سیستم</button>';
+  };
+  reader.readAsText(file, "UTF-8");
 }
 
-function doReject(id) {
-  var phone = document.getElementById("rPhone") ? document.getElementById("rPhone").value.trim() : "";
-  var msg = document.getElementById("rMsg") ? document.getElementById("rMsg").value.trim() : "";
-  if(!phone){alert("شماره موبایل را وارد کنید");return;}
-  if(!msg){alert("دلیل رد را بنویسید");return;}
-  alert("✅ پیام به " + phone + " ارسال شد:\n\n" + msg);
-  changeStatus(id, "rejected");
+async function importExcelRows(rows) {
+  var ok = 0; var fail = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    if (!r.name) { fail++; continue; }
+    var trk = "NOPC-" + Math.floor(100000 + Math.random() * 900000);
+    try {
+      var res = await sb.from("suppliers").insert({
+        id: trk, name: r.name, type: r.type||"legal",
+        category: r.category||"", province: r.province||"",
+        phone: r.phone||"", email: r.email||"",
+        status: "approved", is_blacklist: false, avg_score: 0
+      });
+      if (!res.error) ok++; else fail++;
+    } catch(e) { fail++; }
+  }
+  alert("✅ وارد شد: " + ok + " ردیف\n❌ ناموفق: " + fail + " ردیف");
+  await loadSuppliers(); renderStats(); renderTab("list");
 }
 
 function showModal(title, body) {
